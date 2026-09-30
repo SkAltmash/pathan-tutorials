@@ -121,38 +121,42 @@ export default function DashboardPage() {
             <p className="text-sm">No enquiries yet</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Student</th>
-                  <th>Phone</th>
-                  <th>Class</th>
-                  <th>Course</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentEnquiries.map((enq) => (
-                  <tr key={enq.id}>
-                    <td className="font-600 text-white">{enq.studentName}</td>
-                    <td>{enq.phone}</td>
-                    <td>{enq.class}</td>
-                    <td>{enq.course || "—"}</td>
-                    <td>
-                      <span className={`badge ${STATUS_COLORS[enq.status] || "badge-gray"}`}>
-                        {enq.status}
-                      </span>
-                    </td>
-                    <td className="text-[var(--text-muted)]">
-                      {new Date(enq.createdAt).toLocaleDateString("en-IN")}
-                    </td>
+          <>
+            {/* Desktop table */}
+            <div className="hidden sm:block table-scroll">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Student</th><th>Phone</th><th>Class</th><th>Course</th><th>Status</th><th>Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {recentEnquiries.map((enq) => (
+                    <tr key={enq.id}>
+                      <td className="font-600 text-white">{enq.studentName}</td>
+                      <td>{enq.phone}</td>
+                      <td>{enq.class}</td>
+                      <td>{enq.course || "—"}</td>
+                      <td><span className={`badge ${STATUS_COLORS[enq.status] || "badge-gray"}`}>{enq.status}</span></td>
+                      <td className="text-[var(--text-muted)]">{new Date(enq.createdAt).toLocaleDateString("en-IN")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Mobile card list */}
+            <div className="sm:hidden flex flex-col divide-y divide-[var(--border)]">
+              {recentEnquiries.map((enq) => (
+                <Link key={enq.id} href="/admin/enquiries" className="flex items-center justify-between gap-3 py-3 hover:bg-white/3 transition-colors">
+                  <div className="min-w-0">
+                    <p className="font-600 text-white text-sm truncate">{enq.studentName}</p>
+                    <p className="text-xs text-[var(--text-muted)] truncate">{enq.phone} · Class {enq.class}</p>
+                  </div>
+                  <span className={`badge ${STATUS_COLORS[enq.status] || "badge-gray"} text-[10px] flex-shrink-0`}>{enq.status}</span>
+                </Link>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

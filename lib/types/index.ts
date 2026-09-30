@@ -129,15 +129,20 @@ export type GalleryCategory =
   | "Achievements"
   | "Activities";
 
+export type GalleryMediaType = "image" | "youtube" | "instagram";
+
 export interface GalleryImage {
   id: string;
-  url: string;
+  url: string;           // image URL (image) or original reel/video URL
   title: string;
   category: GalleryCategory;
   description: string;
   order: number;
   isActive: boolean;
   storagePath: string;
+  mediaType?: GalleryMediaType;  // defaults to "image"
+  embedUrl?: string;             // YouTube embed URL
+  thumbnailUrl?: string;         // custom thumbnail for video/reel
   createdAt?: string;
   updatedAt?: string;
 }

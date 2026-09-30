@@ -54,11 +54,11 @@ export default function AnnouncementsAdminPage() {
         </button>
       </div>
 
-      <div className="admin-card overflow-x-auto">
+      <div className="admin-card">
         {fetching ? <div className="space-y-3 p-4">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-12 rounded" />)}</div>
           : items.length === 0 ? <div className="text-center py-12 text-[var(--text-muted)]">No announcements yet</div>
           : (
-            <table className="admin-table">
+            <div className="table-scroll"><table className="admin-table">
               <thead><tr><th>Title</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody>
                 {items.map((item) => (
@@ -79,12 +79,12 @@ export default function AnnouncementsAdminPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
       </div>
 
       {modal && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-5 border-b border-[var(--border)]">
               <h3 className="font-700 text-white">{modal.mode === "add" ? "Add Announcement" : "Edit Announcement"}</h3>

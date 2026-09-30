@@ -1,29 +1,23 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Images, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Images, X, ChevronLeft, ChevronRight, Play, AtSign } from "lucide-react";
 import { GalleryImage, GalleryCategory } from "@/lib/types";
-
-const DEFAULT_GALLERY: GalleryImage[] = [
-  { id: "1", url: "/logo.jpg", title: "Teaching in Progress", category: "Classes", description: "", order: 1, isActive: true, storagePath: "" },
-  { id: "2", url: "/logo.jpg", title: "Result Celebration", category: "Results", description: "", order: 2, isActive: true, storagePath: "" },
-  { id: "3", url: "/logo.jpg", title: "Annual Function", category: "Events", description: "", order: 3, isActive: true, storagePath: "" },
-  { id: "4", url: "/logo.jpg", title: "Student Achievement", category: "Achievements", description: "", order: 4, isActive: true, storagePath: "" },
-  { id: "5", url: "/logo.jpg", title: "Science Activity", category: "Activities", description: "", order: 5, isActive: true, storagePath: "" },
-  { id: "6", url: "/logo.jpg", title: "Batch Photo", category: "Classes", description: "", order: 6, isActive: true, storagePath: "" },
-];
 
 const CATEGORIES: (GalleryCategory | "All")[] = ["All", "Classes", "Events", "Results", "Achievements", "Activities"];
 
 export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
-  const items = gallery.length > 0 ? gallery : DEFAULT_GALLERY;
   const [activeCategory, setActiveCategory] = useState<GalleryCategory | "All">("All");
   const [lightbox, setLightbox] = useState<number | null>(null);
 
-  const filtered = activeCategory === "All" ? items : items.filter((g) => g.category === activeCategory);
+  const filtered = activeCategory === "All"
+    ? gallery
+    : gallery.filter((g) => g.category === activeCategory);
 
   const prev = () => setLightbox((l) => (l !== null ? (l - 1 + filtered.length) % filtered.length : null));
   const next = () => setLightbox((l) => (l !== null ? (l + 1) % filtered.length : null));
+
+  if (gallery.length === 0) return null;
 
   return (
     <section id="gallery" className="section-padding bg-[var(--bg-dark)]">
@@ -59,54 +53,123 @@ export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {filtered.map((img, idx) => (
-            <button
-              key={img.id}
-              onClick={() => setLightbox(idx)}
-              className="relative aspect-square rounded-xl overflow-hidden group bg-[var(--bg-surface)] border border-[var(--border)] hover:border-primary/30 transition-all"
-            >
-              <Image src={img.url} alt={img.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end p-3">
-                <p className="text-white text-xs font-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  {img.title}
-                </p>
-              </div>
-              <div className="absolute top-2 right-2">
-                <span className="badge badge-yellow text-[10px]">{img.category}</span>
-              </div>
-            </button>
-          ))}
-        </div>
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 text-[var(--text-muted)]">No media in this category yet.</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {filtered.map((item, idx) => {
+              const type = item.mediaType ?? "image";
+              const thumb = item.thumbnailUrl || (type === "image" ? item.url : "");
 
-        {filtered.length === 0 && (
-          <div className="text-center py-16 text-[var(--text-muted)]">No images in this category yet.</div>
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setLightbox(idx)}
+                  className="relative aspect-square rounded-xl overflow-hidden group bg-[var(--bg-surface)] border border-[var(--border)] hover:border-primary/30 transition-all"
+                >
+                  {/* Thumbnail */}
+                  {thumb ? (
+                    <Image src={thumb} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  ) : type === "instagram" ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#dc2743]">
+                      <AtSign size={32} className="text-white mb-1" />
+                      <span className="text-white text-xs font-600">Reel</span>
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-surface)]">
+                      <Images size={28} className="text-[var(--text-muted)]" />
+                    </div>
+                  )}
+
+                  {/* Play overlay for video types */}
+                  {(type === "youtube" || type === "instagram") && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${
+                        type === "youtube" ? "bg-red-600" : "bg-gradient-to-br from-[#e6683c] to-[#dc2743]"
+                      }`}>
+                        <Play size={18} className="text-white ml-0.5" fill="white" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+
+                  {/* Caption */}
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
+                    <p className="text-white text-xs font-600 truncate">{item.title}</p>
+                    <span className="badge badge-yellow text-[9px]">{item.category}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         )}
       </div>
 
       {/* Lightbox */}
-      {lightbox !== null && (
-        <div
-          className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 animate-fadeIn"
-          onClick={() => setLightbox(null)}
-        >
-          <button className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors z-10" onClick={() => setLightbox(null)}>
-            <X size={28} />
-          </button>
-          <button className="absolute left-4 text-white/70 hover:text-white transition-colors z-10" onClick={(e) => { e.stopPropagation(); prev(); }}>
-            <ChevronLeft size={36} />
-          </button>
-          <div className="relative max-w-4xl max-h-[85vh] w-full h-full" onClick={(e) => e.stopPropagation()}>
-            <Image src={filtered[lightbox].url} alt={filtered[lightbox].title} fill className="object-contain" />
+      {lightbox !== null && filtered[lightbox] && (() => {
+        const item = filtered[lightbox];
+        const type = item.mediaType ?? "image";
+
+        return (
+          <div
+            className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center"
+            onClick={() => setLightbox(null)}
+          >
+            {/* Controls */}
+            <button className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20" onClick={() => setLightbox(null)}>
+              <X size={22} />
+            </button>
+            <button className="absolute left-3 sm:left-6 text-white/70 hover:text-white transition-colors z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20" onClick={(e) => { e.stopPropagation(); prev(); }}>
+              <ChevronLeft size={22} />
+            </button>
+            <button className="absolute right-3 sm:right-6 text-white/70 hover:text-white transition-colors z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20" onClick={(e) => { e.stopPropagation(); next(); }}>
+              <ChevronRight size={22} />
+            </button>
+
+            {/* Media */}
+            <div
+              className="relative w-full max-w-3xl px-14 sm:px-20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {type === "image" && (
+                <div className="relative aspect-video w-full">
+                  <Image src={item.url} alt={item.title} fill className="object-contain rounded-xl" />
+                </div>
+              )}
+
+              {type === "youtube" && item.embedUrl && (
+                <div className="aspect-video w-full rounded-xl overflow-hidden">
+                  <iframe
+                    src={`${item.embedUrl}?autoplay=1&rel=0`}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+
+              {type === "instagram" && item.embedUrl && (
+                <div className="w-full max-w-sm mx-auto rounded-xl overflow-hidden bg-black" style={{ aspectRatio: "9/16", maxHeight: "70dvh" }}>
+                  <iframe
+                    src={item.embedUrl}
+                    className="w-full h-full"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+
+              {/* Caption */}
+              <div className="text-center mt-4">
+                <p className="text-white font-600">{item.title}</p>
+                <p className="text-white/50 text-sm mt-0.5">{lightbox + 1} / {filtered.length}</p>
+              </div>
+            </div>
           </div>
-          <button className="absolute right-4 text-white/70 hover:text-white transition-colors z-10" onClick={(e) => { e.stopPropagation(); next(); }}>
-            <ChevronRight size={36} />
-          </button>
-          <div className="absolute bottom-4 left-0 right-0 text-center text-white/60 text-sm">
-            {filtered[lightbox].title} — {lightbox + 1}/{filtered.length}
-          </div>
-        </div>
-      )}
+        );
+      })()}
     </section>
   );
 }

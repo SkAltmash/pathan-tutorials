@@ -431,8 +431,51 @@ body {
 }
 
 .admin-content {
-  padding: 2rem 1.5rem;
+  padding: 1rem;
   flex: 1;
+}
+
+@media (min-width: 640px) {
+  .admin-content {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Scrollable table wrapper for mobile */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile card-list: visible only below sm */
+.mobile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobile-card-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.mobile-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.mobile-card-value {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: right;
 }
 
 .admin-card {
@@ -694,8 +737,16 @@ body {
     margin-left: 0;
   }
 
+  .admin-topbar {
+    padding: 0.75rem 1rem;
+  }
+
   .section-padding {
     padding: 3.5rem 0;
+  }
+
+  .admin-card {
+    padding: 1rem;
   }
 }
 
