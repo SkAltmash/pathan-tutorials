@@ -1,0 +1,89 @@
+import {
+  getSiteSettings,
+  getHeroSettings,
+  getStatistics,
+  getCourses,
+  getResults,
+  getTestimonials,
+  getFaculty,
+  getGallery,
+  getAnnouncements,
+  getNavigationSettings,
+  getFloatingButtons,
+} from "@/lib/firebase/firestore";
+import Navbar from "@/components/public/Navbar";
+import Hero from "@/components/public/Hero";
+import Stats from "@/components/public/Stats";
+import About from "@/components/public/About";
+import Courses from "@/components/public/Courses";
+import WhyUs from "@/components/public/WhyUs";
+import Results from "@/components/public/Results";
+import FacultySection from "@/components/public/FacultySection";
+import Testimonials from "@/components/public/Testimonials";
+import Gallery from "@/components/public/Gallery";
+import Announcements from "@/components/public/Announcements";
+import Contact from "@/components/public/Contact";
+import Footer from "@/components/public/Footer";
+import FloatingButtons from "@/components/public/FloatingButtons";
+
+// Fetch all data on the server — zero client bundle cost
+async function getPageData() {
+  const [
+    settings, hero, statistics, courses, results,
+    testimonials, faculty, gallery, announcements,
+    nav, floatingButtons,
+  ] = await Promise.allSettled([
+    getSiteSettings(),
+    getHeroSettings(),
+    getStatistics(),
+    getCourses(),
+    getResults(),
+    getTestimonials(),
+    getFaculty(),
+    getGallery(),
+    getAnnouncements(),
+    getNavigationSettings(),
+    getFloatingButtons(),
+  ]);
+
+  return {
+    settings: settings.status === "fulfilled" ? settings.value : null,
+    hero: hero.status === "fulfilled" ? hero.value : null,
+    statistics: statistics.status === "fulfilled" ? statistics.value : [],
+    courses: courses.status === "fulfilled" ? courses.value : [],
+    results: results.status === "fulfilled" ? results.value : [],
+    testimonials: testimonials.status === "fulfilled" ? testimonials.value : [],
+    faculty: faculty.status === "fulfilled" ? faculty.value : [],
+    gallery: gallery.status === "fulfilled" ? gallery.value : [],
+    announcements: announcements.status === "fulfilled" ? announcements.value : [],
+    nav: nav.status === "fulfilled" ? nav.value : null,
+    floatingButtons: floatingButtons.status === "fulfilled" ? floatingButtons.value : null,
+  };
+}
+
+export default async function HomePage() {
+  const data = await getPageData();
+
+  return (
+    <>
+      <Navbar nav={data.nav} settings={data.settings} />
+
+      <main>
+        <Hero hero={data.hero} settings={data.settings} />
+        <Stats statistics={data.statistics} />
+        <About settings={data.settings} />
+        <Courses courses={data.courses} />
+        <WhyUs />
+        <Results results={data.results} />
+        <FacultySection faculty={data.faculty} />
+        <Testimonials testimonials={data.testimonials} />
+        <Gallery gallery={data.gallery} />
+        <Announcements announcements={data.announcements} />
+        <Contact settings={data.settings} />
+      </main>
+
+      <Footer settings={data.settings} />
+      <FloatingButtons floatingButtons={data.floatingButtons} settings={data.settings} />
+    </>
+  );
+}
