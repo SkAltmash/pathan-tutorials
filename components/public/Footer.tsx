@@ -54,7 +54,7 @@ export default function Footer({ settings }: FooterProps) {
   ].filter((s) => s.url);
 
   return (
-    <footer className="bg-[var(--bg-card)] border-t p-5 border-[var(--border)]">
+    <footer className="bg-[var(--bg-card)] border-t pt-5 pb-5 border-[var(--border)]">
 
       {/* ── Main Grid ─────────────────────────────────────────── */}
       <div className="container-custom py-12 lg:py-16">
@@ -193,7 +193,7 @@ export default function Footer({ settings }: FooterProps) {
       </div>
 
       {/* ── Bottom bar ─────────────────────────────────────────── */}
-      <div className="border-t border-[var(--border)] pt-5">
+      <div className="border-t border-[var(--border)] pt-5 mt-2">
         <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p className="text-xs text-[var(--text-muted)]">{copyright}</p>
           <div className="flex items-center gap-4">

@@ -83,7 +83,11 @@ export default function Navbar({ nav, settings }: NavbarProps) {
       {/* ── Fixed Header ──────────────────────────────────────────── */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled || menuOpen ? "nav-blur shadow-lg shadow-black/20" : "bg-transparent"
+          menuOpen
+            ? "-translate-y-full opacity-0 pointer-events-none"
+            : scrolled
+            ? "nav-blur shadow-lg shadow-black/20 translate-y-0 opacity-100"
+            : "bg-transparent translate-y-0 opacity-100"
         }`}
       >
         <div className="container-custom flex items-center justify-between h-16 lg:h-20">
