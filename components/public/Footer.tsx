@@ -1,10 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Phone, MessageCircle, Mail, MapPin,
-  AtSign, Share2, PlayCircle, Send, Link2,
-  ArrowRight, Clock,
-} from "lucide-react";
+import { Phone, MessageCircle, Mail, MapPin, ArrowRight, Clock } from "lucide-react";
+import { FaInstagram, FaFacebookF, FaYoutube, FaTelegramPlane, FaLinkedinIn } from "react-icons/fa";
 import { SiteSettings } from "@/lib/types";
 
 interface FooterProps {
@@ -46,11 +43,11 @@ export default function Footer({ settings }: FooterProps) {
   const hours = settings?.openingHours || "";
 
   const socials = [
-    { url: settings?.instagramUrl, Icon: AtSign, label: "Instagram", color: "hover:text-[#e1306c] hover:border-[#e1306c]/30" },
-    { url: settings?.facebookUrl, Icon: Share2, label: "Facebook", color: "hover:text-[#1877f2] hover:border-[#1877f2]/30" },
-    { url: settings?.youtubeUrl, Icon: PlayCircle, label: "YouTube", color: "hover:text-[#ff0000] hover:border-[#ff0000]/30" },
-    { url: settings?.telegramUrl, Icon: Send, label: "Telegram", color: "hover:text-[#0088cc] hover:border-[#0088cc]/30" },
-    { url: settings?.linkedinUrl, Icon: Link2, label: "LinkedIn", color: "hover:text-[#0077b5] hover:border-[#0077b5]/30" },
+    { url: settings?.instagramUrl, Icon: FaInstagram,    label: "Instagram", color: "hover:text-[#e1306c] hover:border-[#e1306c]/30" },
+    { url: settings?.facebookUrl,  Icon: FaFacebookF,    label: "Facebook",  color: "hover:text-[#1877f2] hover:border-[#1877f2]/30" },
+    { url: settings?.youtubeUrl,   Icon: FaYoutube,      label: "YouTube",   color: "hover:text-[#ff0000] hover:border-[#ff0000]/30" },
+    { url: settings?.telegramUrl,  Icon: FaTelegramPlane,label: "Telegram",  color: "hover:text-[#0088cc] hover:border-[#0088cc]/30" },
+    { url: settings?.linkedinUrl,  Icon: FaLinkedinIn,   label: "LinkedIn",  color: "hover:text-[#0077b5] hover:border-[#0077b5]/30" },
   ].filter((s) => s.url);
 
   return (

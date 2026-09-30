@@ -1,10 +1,28 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Images, X, ChevronLeft, ChevronRight, Play, AtSign } from "lucide-react";
+import { Images, X, ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { GalleryImage, GalleryCategory } from "@/lib/types";
 
 const CATEGORIES: (GalleryCategory | "All")[] = ["All", "Classes", "Events", "Results", "Achievements", "Activities"];
+
+// Extract YouTube video ID from any YouTube URL format
+function ytId(url: string): string | null {
+  const m = url?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^&?\n#]+)/);
+  return m ? m[1] : null;
+}
+
+function getThumb(item: GalleryImage): string {
+  if (item.thumbnailUrl) return item.thumbnailUrl;
+  const type = item.mediaType ?? "image";
+  if (type === "youtube") {
+    const id = ytId(item.embedUrl || item.url);
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+  }
+  if (type === "image") return item.url;
+  return ""; // instagram — no thumbnail stored, show branded card
+}
 
 export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
   const [activeCategory, setActiveCategory] = useState<GalleryCategory | "All">("All");
@@ -59,7 +77,7 @@ export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {filtered.map((item, idx) => {
               const type = item.mediaType ?? "image";
-              const thumb = item.thumbnailUrl || (type === "image" ? item.url : "");
+              const thumb = getThumb(item);
 
               return (
                 <button
@@ -69,10 +87,10 @@ export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
                 >
                   {/* Thumbnail */}
                   {thumb ? (
-                    <Image src={thumb} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <Image src={thumb} alt={item.title} fill sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : type === "instagram" ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#dc2743]">
-                      <AtSign size={32} className="text-white mb-1" />
+                      <FaInstagram size={32} className="text-white mb-1" />
                       <span className="text-white text-xs font-600">Reel</span>
                     </div>
                   ) : (
@@ -87,7 +105,10 @@ export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${
                         type === "youtube" ? "bg-red-600" : "bg-gradient-to-br from-[#e6683c] to-[#dc2743]"
                       }`}>
-                        <Play size={18} className="text-white ml-0.5" fill="white" />
+                        {type === "youtube"
+                          ? <FaYoutube size={22} className="text-white" />
+                          : <FaInstagram size={20} className="text-white" />
+                        }
                       </div>
                     </div>
                   )}
@@ -135,29 +156,65 @@ export default function Gallery({ gallery }: { gallery: GalleryImage[] }) {
             >
               {type === "image" && (
                 <div className="relative aspect-video w-full">
-                  <Image src={item.url} alt={item.title} fill className="object-contain rounded-xl" />
+                  <Image src={item.url} alt={item.title} fill sizes="90vw" className="object-contain rounded-xl" />
                 </div>
               )}
 
-              {type === "youtube" && item.embedUrl && (
-                <div className="aspect-video w-full rounded-xl overflow-hidden">
-                  <iframe
-                    src={`${item.embedUrl}?autoplay=1&rel=0`}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              )}
+              {type === "youtube" && (() => {
+                // Compute embed URL from stored embedUrl or raw url
+                const id = ytId(item.embedUrl || item.url);
+                const embedSrc = id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : null;
+                return embedSrc ? (
+                  <div className="aspect-video w-full rounded-xl overflow-hidden shadow-2xl">
+                    <iframe
+                      src={embedSrc}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : null;
+              })()}
 
-              {type === "instagram" && item.embedUrl && (
-                <div className="w-full max-w-sm mx-auto rounded-xl overflow-hidden bg-black" style={{ aspectRatio: "9/16", maxHeight: "70dvh" }}>
-                  <iframe
-                    src={item.embedUrl}
-                    className="w-full h-full"
-                    scrolling="no"
-                    allowFullScreen
-                  />
+              {type === "instagram" && (
+                <div className="w-full max-w-xs mx-auto" onClick={(e) => e.stopPropagation()}>
+                  {/* Instagram blocks cross-origin iframes — show preview card instead */}
+                  <div className="relative rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl bg-gradient-to-br from-[#f09433] via-[#e6683c] via-[#dc2743] to-[#cc2366]">
+                    {/* Thumbnail if available */}
+                    {item.thumbnailUrl ? (
+                      <div className="relative aspect-[9/16] w-full" style={{ maxHeight: "55dvh" }}>
+                        <Image src={item.thumbnailUrl!} alt={item.title} fill sizes="320px" className="object-cover" />
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center gap-4 py-20 px-8">
+                        <FaInstagram size={56} className="text-white drop-shadow-lg" />
+                        <p className="text-white font-700 text-lg text-center">{item.title}</p>
+                      </div>
+                    )}
+                    {/* Play overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center">
+                        <FaInstagram size={28} className="text-white" />
+                      </div>
+                    </div>
+                    {/* Bottom label */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                      <p className="text-white font-600 text-sm truncate">{item.title}</p>
+                      <p className="text-white/60 text-xs mt-0.5">Instagram Reel</p>
+                    </div>
+                  </div>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl font-600 text-white text-sm transition-all"
+                    style={{ background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366)" }}
+                  >
+                    <FaInstagram size={16} />
+                    Watch Reel on Instagram
+                  </a>
                 </div>
               )}
 

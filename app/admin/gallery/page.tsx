@@ -6,7 +6,8 @@ import AdminShell from "@/components/admin/AdminShell";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { getAllGallery, addGalleryImage, updateGalleryImage, deleteGalleryImage } from "@/lib/firebase/firestore";
 import { GalleryImage, GalleryCategory, GalleryMediaType } from "@/lib/types";
-import { Plus, Trash2, X, Save, Loader2, ToggleLeft, ToggleRight, Image as ImageIcon, PlayCircle, AtSign, Pencil } from "lucide-react";
+import { Plus, Trash2, X, Save, Loader2, ToggleLeft, ToggleRight, Image as ImageIcon, Pencil } from "lucide-react";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
@@ -137,8 +138,12 @@ export default function GalleryAdminPage() {
   // Thumbnail to show in grid for each item
   const getThumb = (img: GalleryImage) => {
     if (img.thumbnailUrl) return img.thumbnailUrl;
-    if (img.mediaType === "youtube") return getYouTubeThumbnail(img.url);
-    if (img.mediaType !== "instagram") return img.url;
+    const type = img.mediaType ?? (img.embedUrl ? "youtube" : "image");
+    if (type === "youtube") {
+      // Try embedUrl first, then raw url
+      return getYouTubeThumbnail(img.embedUrl || img.url);
+    }
+    if (type === "image") return img.url;
     return "";
   };
 
@@ -173,7 +178,7 @@ export default function GalleryAdminPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {filtered.map((img) => {
             const thumb = getThumb(img);
-            const type = img.mediaType ?? "image";
+            const type = img.mediaType ?? (img.embedUrl ? "youtube" : "image");
             return (
               <div key={img.id} className="relative group rounded-xl overflow-hidden border border-[var(--border)] aspect-square bg-[var(--bg-surface)]">
                 {/* Thumbnail */}
@@ -181,7 +186,7 @@ export default function GalleryAdminPage() {
                   <Image src={thumb} alt={img.title} fill className="object-cover" />
                 ) : type === "instagram" ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#dc2743]">
-                    <AtSign size={28} className="text-white" />
+                    <FaInstagram size={28} className="text-white" />
                     <span className="text-white text-[10px] font-600">Reel</span>
                   </div>
                 ) : (
@@ -235,8 +240,8 @@ export default function GalleryAdminPage() {
                 <div className="grid grid-cols-3 gap-2">
                   {([
                     { type: "image" as GalleryMediaType, label: "Photo", Icon: ImageIcon, color: "text-primary" },
-                    { type: "youtube" as GalleryMediaType, label: "YouTube", Icon: Youtube, color: "text-red-500" },
-                    { type: "instagram" as GalleryMediaType, label: "Reel", Icon: Instagram, color: "text-pink-500" },
+                    { type: "youtube" as GalleryMediaType, label: "YouTube", Icon: FaYoutube, color: "text-red-500" },
+                    { type: "instagram" as GalleryMediaType, label: "Reel", Icon: FaInstagram, color: "text-pink-500" },
                   ]).map(({ type, label, Icon, color }) => (
                     <button
                       key={type}
@@ -283,7 +288,7 @@ export default function GalleryAdminPage() {
                       <Image src={d.thumbnailUrl} alt="Preview" fill className="object-cover" />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center">
-                          <PlayCircle size={22} className="text-white" />
+                          <FaYoutube size={22} className="text-white" />
                         </div>
                       </div>
                     </div>
