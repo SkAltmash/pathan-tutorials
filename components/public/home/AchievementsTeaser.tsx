@@ -25,7 +25,7 @@ export default function AchievementsTeaser({ achievements }: { achievements: Ach
                 <Trophy size={22} className="text-primary" />
               </div>
               <div>
-                <h3 className="font-display font-bold text-white text-base">{a.title || (a as Record<string, string>).name}</h3>
+                <h3 className="font-display font-bold text-white text-base">{a.title}</h3>
                 {a.description && <p className="text-xs text-[var(--text-secondary)] mt-1">{a.description}</p>}
               </div>
             </div>

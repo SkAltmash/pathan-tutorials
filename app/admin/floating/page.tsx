@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import AdminShell from "@/components/admin/AdminShell";
 import { getFloatingButtons, saveFloatingButtons } from "@/lib/firebase/firestore";
-import { FloatingButtonsSettings } from "@/lib/types";
+import { FloatingButtonsSettings, FloatingButton } from "@/lib/types";
 import { Save, Loader2, MessageCircle, Phone, Camera } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -27,7 +27,10 @@ export default function FloatingAdminPage() {
   }, [user]);
 
   const setBtn = (type: keyof FloatingButtonsSettings, field: string, val: string | boolean) =>
-    setForm((f) => ({ ...f, [type]: { ...f[type], [field]: val } }));
+    setForm((f) => ({
+      ...f,
+      [type]: { ...(f[type] as FloatingButton), [field]: val },
+    }));
 
   const handleSave = async () => {
     setSaving(true);
@@ -47,40 +50,40 @@ export default function FloatingAdminPage() {
     <AdminShell title="Floating Buttons">
       <div className="max-w-xl space-y-4">
         {buttons.map(({ key, label, icon: Icon, placeholder }) => (
-          <div key={key} className="admin-card space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <Icon size={18} className="text-primary" />
-                <h3 className="font-700 text-base text-white">{label}</h3>
-              </div>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={form[key].isActive}
-                  onChange={(e) => setBtn(key, "isActive", e.target.checked)}
-                  className="w-4 h-4 accent-primary"
-                />
-                <span className="text-sm text-[var(--text-secondary)]">Active</span>
-              </label>
+        <div key={key} className="admin-card space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+            <div className="flex items-center gap-2">
+              <Icon size={18} className="text-primary" />
+              <h3 className="font-700 text-base text-white">{label}</h3>
             </div>
-            <div>
-              <label className="form-label">Link / Number</label>
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
-                className="form-input"
-                value={form[key].link}
-                onChange={(e) => setBtn(key, "link", e.target.value)}
-                placeholder={placeholder}
+                type="checkbox"
+                checked={(form[key] as FloatingButton).isActive}
+                onChange={(e) => setBtn(key, "isActive", e.target.checked)}
+                className="w-4 h-4 accent-primary"
               />
-            </div>
-            <div>
-              <label className="form-label">Label (tooltip)</label>
-              <input
-                className="form-input"
-                value={form[key].label}
-                onChange={(e) => setBtn(key, "label", e.target.value)}
-              />
-            </div>
+              <span className="text-sm text-[var(--text-secondary)]">Active</span>
+            </label>
           </div>
+          <div>
+            <label className="form-label">Link / Number</label>
+            <input
+              className="form-input"
+              value={(form[key] as FloatingButton).link}
+              onChange={(e) => setBtn(key, "link", e.target.value)}
+              placeholder={placeholder}
+            />
+          </div>
+          <div>
+            <label className="form-label">Label (tooltip)</label>
+            <input
+              className="form-input"
+              value={(form[key] as FloatingButton).label}
+              onChange={(e) => setBtn(key, "label", e.target.value)}
+            />
+          </div>
+        </div>
         ))}
 
         <button onClick={handleSave} disabled={saving} className="btn-primary">

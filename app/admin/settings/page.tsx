@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 const EMPTY: SiteSettings = {
   siteName: "Pathan Tutorials", tagline: "Excellence in Mathematics",
-  description: "", logo: "/logo.jpg", favicon: "", phone: "", whatsapp: "",
+  description: "", logo: "/logo.jpg", sir: "", favicon: "", phone: "", whatsapp: "",
   email: "", address: "", googleMapsUrl: "", instagramUrl: "", facebookUrl: "",
   youtubeUrl: "", telegramUrl: "", linkedinUrl: "", openingHours: "",
   footerDescription: "", footerCopyright: "",

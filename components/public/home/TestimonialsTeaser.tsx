@@ -20,11 +20,10 @@ export default function TestimonialsTeaser({ testimonials }: { testimonials: Tes
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {testimonials.slice(0, 3).map((t) => {
-            const name = (t as Record<string, string>).studentName || (t as Record<string, string>).name || "Student";
-            const review = (t as Record<string, string>).review || (t as Record<string, string>).testimonial || "";
-            const rating = (t as Record<string, number>).rating || 5;
-            const cls = (t as Record<string, string>).class;
-            const yr = (t as Record<string, string>).year;
+            const name = t.name || "Student";
+            const review = t.testimonial || "";
+            const rating = t.rating ?? 5;
+            const cls = t.class;
 
             return (
               <div key={t.id} className="card-glass p-5 flex flex-col gap-4">
@@ -42,10 +41,8 @@ export default function TestimonialsTeaser({ testimonials }: { testimonials: Tes
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white">{name}</p>
-                    {(cls || yr) && (
-                      <p className="text-xs text-[var(--text-muted)]">
-                        {cls ? `Class ${cls}` : ""}{cls && yr ? " · " : ""}{yr || ""}
-                      </p>
+                    {cls && (
+                      <p className="text-xs text-[var(--text-muted)]">Class {cls}</p>
                     )}
                   </div>
                 </div>
