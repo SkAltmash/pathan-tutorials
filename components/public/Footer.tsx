@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, MessageCircle, Mail, MapPin, AtSign, Share2, PlayCircle, Send, Link2 } from "lucide-react";
+import {
+  Phone, MessageCircle, Mail, MapPin,
+  AtSign, Share2, PlayCircle, Send, Link2,
+  ArrowRight, Clock,
+} from "lucide-react";
 import { SiteSettings } from "@/lib/types";
 
 interface FooterProps {
@@ -19,124 +23,168 @@ const QUICK_LINKS = [
 ];
 
 const COURSE_LINKS = [
-  { label: "8th Mathematics", href: "/courses" },
-  { label: "9th Mathematics", href: "/courses" },
-  { label: "10th Mathematics", href: "/courses" },
-  { label: "11th Mathematics", href: "/courses" },
-  { label: "12th Mathematics", href: "/courses" },
-  { label: "MHT-CET Prep", href: "/courses" },
+  "8th Mathematics",
+  "9th Mathematics",
+  "10th Mathematics",
+  "11th Mathematics",
+  "12th Mathematics",
+  "MHT-CET Prep",
 ];
 
 export default function Footer({ settings }: FooterProps) {
   const logo = settings?.logo || "/logo.jpg";
   const name = settings?.siteName || "Pathan Tutorials";
-  const description = settings?.footerDescription || settings?.description || "Premier Mathematics coaching institute in Hinganghat. CBSE, State Board & MHT-CET preparation with proven results.";
-  const copyright = settings?.footerCopyright || `© ${new Date().getFullYear()} ${name}. All rights reserved.`;
+  const tagline = settings?.tagline || "Excellence in Mathematics";
+  const description = settings?.footerDescription || settings?.description ||
+    "Premier Mathematics coaching institute in Hinganghat. CBSE, State Board & MHT-CET preparation with proven results.";
+  const copyright = settings?.footerCopyright ||
+    `© ${new Date().getFullYear()} ${name}. All rights reserved.`;
+  const phone = settings?.phone || "";
+  const whatsapp = settings?.whatsapp || "";
+  const email = settings?.email || "";
+  const address = settings?.address || "";
+  const hours = settings?.openingHours || "";
+
+  const socials = [
+    { url: settings?.instagramUrl, Icon: AtSign, label: "Instagram", color: "hover:text-[#e1306c] hover:border-[#e1306c]/30" },
+    { url: settings?.facebookUrl, Icon: Share2, label: "Facebook", color: "hover:text-[#1877f2] hover:border-[#1877f2]/30" },
+    { url: settings?.youtubeUrl, Icon: PlayCircle, label: "YouTube", color: "hover:text-[#ff0000] hover:border-[#ff0000]/30" },
+    { url: settings?.telegramUrl, Icon: Send, label: "Telegram", color: "hover:text-[#0088cc] hover:border-[#0088cc]/30" },
+    { url: settings?.linkedinUrl, Icon: Link2, label: "LinkedIn", color: "hover:text-[#0077b5] hover:border-[#0077b5]/30" },
+  ].filter((s) => s.url);
 
   return (
-    <footer className="bg-[var(--bg-card)] border-t border-[var(--border)]">
-      <div className="container-custom py-12">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30">
+    <footer className="bg-[var(--bg-card)] border-t p-5 border-[var(--border)]">
+
+      {/* ── Main Grid ─────────────────────────────────────────── */}
+      <div className="container-custom py-12 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          {/* ── Brand column ──────────────────────────────────── */}
+          <div className="sm:col-span-2 lg:col-span-1 flex flex-col gap-5">
+            <Link href="/" className="flex items-center gap-3 group w-fit">
+              <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-primary/30 ring-2 ring-primary/10 transition-all duration-300 group-hover:border-primary/60">
                 <Image src={logo} alt={name} fill className="object-cover" />
               </div>
-              <span className="font-display font-800 text-white">{name}</span>
+              <div>
+                <p className="font-display font-extrabold text-white text-base leading-tight">{name}</p>
+                <p className="text-[10px] text-primary leading-tight mt-0.5">{tagline}</p>
+              </div>
             </Link>
+
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{description}</p>
 
-            {/* Social Links */}
-            <div className="flex gap-2 flex-wrap">
-              {settings?.instagramUrl && (
-                <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-primary hover:border-primary/30 transition-colors">
-                  <AtSign size={15} />
-                </a>
-              )}
-              {settings?.facebookUrl && (
-                <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-primary hover:border-primary/30 transition-colors">
-                  <Share2 size={15} />
-                </a>
-              )}
-              {settings?.youtubeUrl && (
-                <a href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-primary hover:border-primary/30 transition-colors">
-                  <PlayCircle size={15} />
-                </a>
-              )}
-              {settings?.telegramUrl && (
-                <a href={settings.telegramUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-primary hover:border-primary/30 transition-colors">
-                  <Send size={15} />
-                </a>
-              )}
-              {settings?.linkedinUrl && (
-                <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-primary hover:border-primary/30 transition-colors">
-                  <Link2 size={15} />
-                </a>
-              )}
-            </div>
+            {/* Social icons */}
+            {socials.length > 0 && (
+              <div className="flex gap-2 flex-wrap">
+                {socials.map(({ url, Icon, label, color }) => (
+                  <a
+                    key={label}
+                    href={url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className={`w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] transition-all duration-200 ${color}`}
+                  >
+                    <Icon size={15} />
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {/* Enquire CTA */}
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-light transition-colors group w-fit"
+            >
+              Enquire Now
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
 
-          {/* Quick Links */}
+          {/* ── Quick Links ───────────────────────────────────── */}
           <div>
-            <h4 className="font-display font-700 text-sm uppercase tracking-wider text-white mb-4">Quick Links</h4>
-            <ul className="flex flex-col gap-2">
+            <h4 className="font-display font-bold text-xs uppercase tracking-widest text-white mb-5">
+              Quick Links
+            </h4>
+            <ul className="flex flex-col gap-2.5">
               {QUICK_LINKS.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-[var(--text-secondary)] hover:text-primary transition-colors">
+                  <Link
+                    href={link.href}
+                    className="text-sm text-[var(--text-secondary)] hover:text-primary transition-colors hover:translate-x-1 inline-block"
+                  >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Courses */}
+          {/* ── Our Courses ───────────────────────────────────── */}
           <div>
-            <h4 className="font-display font-700 text-sm uppercase tracking-wider text-white mb-4">Our Courses</h4>
-            <ul className="flex flex-col gap-2">
-              {COURSE_LINKS.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-sm text-[var(--text-secondary)] hover:text-primary transition-colors">
-                    {link.label}
-                  </a>
+            <h4 className="font-display font-bold text-xs uppercase tracking-widest text-white mb-5">
+              Our Courses
+            </h4>
+            <ul className="flex flex-col gap-2.5">
+              {COURSE_LINKS.map((label) => (
+                <li key={label}>
+                  <Link
+                    href="/courses"
+                    className="text-sm text-[var(--text-secondary)] hover:text-primary transition-colors hover:translate-x-1 inline-block"
+                  >
+                    {label}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* ── Contact ──────────────────────────────────────── */}
           <div>
-            <h4 className="font-display font-700 text-sm uppercase tracking-wider text-white mb-4">Contact</h4>
-            <div className="flex flex-col gap-3">
-              {settings?.address && (
-                <div className="flex items-start gap-2.5 text-sm text-[var(--text-secondary)]">
+            <h4 className="font-display font-bold text-xs uppercase tracking-widest text-white mb-5">
+              Get In Touch
+            </h4>
+            <div className="flex flex-col gap-3.5">
+              {address && (
+                <div className="flex items-start gap-2.5">
                   <MapPin size={15} className="text-primary mt-0.5 flex-shrink-0" />
-                  <span>{settings.address}</span>
+                  <span className="text-sm text-[var(--text-secondary)] leading-relaxed">{address}</span>
                 </div>
               )}
-              {settings?.phone && (
-                <a href={`tel:${settings.phone}`} className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-primary transition-colors">
+              {hours && (
+                <div className="flex items-start gap-2.5">
+                  <Clock size={15} className="text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-[var(--text-secondary)]">{hours}</span>
+                </div>
+              )}
+              {phone && (
+                <a
+                  href={`tel:${phone.replace(/\s/g, "")}`}
+                  className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-primary transition-colors group"
+                >
                   <Phone size={15} className="text-primary flex-shrink-0" />
-                  {settings.phone}
+                  <span className="group-hover:underline underline-offset-2">{phone}</span>
                 </a>
               )}
-              {settings?.whatsapp && (
-                <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-green-500 transition-colors">
-                  <MessageCircle size={15} className="text-green-500 flex-shrink-0" />
-                  {settings.whatsapp}
+              {whatsapp && (
+                <a
+                  href={`https://wa.me/91${whatsapp.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-[#25d366] transition-colors group"
+                >
+                  <MessageCircle size={15} className="text-[#25d366] flex-shrink-0" />
+                  <span className="group-hover:underline underline-offset-2">{whatsapp}</span>
                 </a>
               )}
-              {settings?.email && (
-                <a href={`mailto:${settings.email}`} className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-primary transition-colors">
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-primary transition-colors group"
+                >
                   <Mail size={15} className="text-primary flex-shrink-0" />
-                  {settings.email}
+                  <span className="group-hover:underline underline-offset-2 break-all">{email}</span>
                 </a>
               )}
             </div>
@@ -144,14 +192,13 @@ export default function Footer({ settings }: FooterProps) {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-[var(--border)]">
-        <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      {/* ── Bottom bar ─────────────────────────────────────────── */}
+      <div className="border-t border-[var(--border)] pt-5">
+        <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p className="text-xs text-[var(--text-muted)]">{copyright}</p>
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="text-xs text-[var(--text-muted)] hover:text-primary transition-colors">
-              Admin Panel
-            </Link>
+            <span className=" text-[var(--text-muted)]">Architected by <Link href="https://zaref.in" target="_blank" className="text-primary">Zaref Technology</Link></span>
+
           </div>
         </div>
       </div>
