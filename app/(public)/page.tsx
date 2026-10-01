@@ -26,7 +26,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero />
+      <Hero settings={settings} />
       <Stats />
       <WhyChooseUs settings={settings} />
       <CoursesPreview courses={courses} />

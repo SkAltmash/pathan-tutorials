@@ -16,7 +16,15 @@ const BADGES = [
   { icon: Clock, text: "10+ Years" },
 ];
 
-export default function Hero() {
+import { SiteSettings } from "@/lib/types";
+
+interface HeroProps {
+  settings?: SiteSettings | null;
+}
+
+export default function Hero({ settings }: HeroProps) {
+  const logo = settings?.logo || "/logo.jpeg";
+  const siteName = settings?.siteName || "Pathan Tutorials";
   return (
     <section
       id="home"
@@ -135,8 +143,8 @@ export default function Hero() {
               {/* Logo circle */}
               <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-4 border-primary/30 ring-8 ring-primary/8 shadow-[0_0_60px_rgba(212,175,55,0.2)] animate-float">
                 <Image
-                  src="/logo.jpeg"
-                  alt="Pathan Tutorials"
+                  src={logo}
+                  alt={siteName}
                   fill
                   sizes="(max-width: 640px) 224px, (max-width: 1024px) 256px, 288px"
                   className="object-cover"

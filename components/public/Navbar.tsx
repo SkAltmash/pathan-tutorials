@@ -53,7 +53,7 @@ export default function Navbar({ nav, settings }: NavbarProps) {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  const logo = nav?.logo || settings?.logo || "/logo.jpeg";
+  const logo = settings?.logo || nav?.logo || "/logo.jpeg";
   const siteName = settings?.siteName || "Pathan Tutorials";
   const tagline = settings?.tagline || "Excellence in Mathematics";
   const ctaText = nav?.ctaText || "Enquire Now";
