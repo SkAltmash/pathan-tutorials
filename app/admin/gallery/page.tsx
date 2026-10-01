@@ -41,11 +41,23 @@ function getYouTubeThumbnail(url: string) {
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 }
 
-// Get Instagram embed src from reel/post URL
+// Get a valid Instagram embed URL from a reel/post URL
 function getInstaEmbed(url: string) {
-  // normalise to just embed URL shown in iframe src
-  const clean = url.replace(/\/$/, "");
-  return clean + "/embed";
+  const raw = url.trim();
+  if (!raw) return "";
+
+  if (raw.includes("instagram.com") && raw.includes("/embed")) {
+    return raw;
+  }
+
+  const match = raw.match(/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_\-]+)/i);
+  if (!match) return "";
+
+  const id = match[1];
+  const type = raw.includes("/reel/") ? "reel" : raw.includes("/tv/") ? "tv" : "p";
+  const suffix = type === "reel" ? "reel" : type === "tv" ? "tv" : "p";
+
+  return `https://www.instagram.com/${suffix}/${id}/embed/?utm_source=ig_web_copy_link`;
 }
 
 type ModalData = GalleryImage | Omit<GalleryImage, "id">;
@@ -63,11 +75,25 @@ export default function GalleryAdminPage() {
 
   useEffect(() => { if (!loading && !user) router.push("/admin"); }, [user, loading, router]);
 
-  const load = async () => {
-    try { const data = await getAllGallery(); setImages(data); }
-    catch { toast.error("Load failed"); } finally { setFetching(false); }
-  };
-  useEffect(() => { if (user) load(); }, [user]);
+  useEffect(() => {
+    if (!user) return;
+
+    let active = true;
+
+    const fetchGallery = async () => {
+      try {
+        const data = await getAllGallery();
+        if (active) setImages(data);
+      } catch {
+        if (active) toast.error("Load failed");
+      } finally {
+        if (active) setFetching(false);
+      }
+    };
+
+    void fetchGallery();
+    return () => { active = false; };
+  }, [user]);
 
   const set = (field: keyof GalleryImage, val: unknown) =>
     setModal((m) => m ? { ...m, data: { ...m.data, [field]: val } } : null);
@@ -117,17 +143,37 @@ export default function GalleryAdminPage() {
         revalidateCache("gallery");
         toast.success("Updated!");
       }
-      setModal(null); load();
+      setModal(null);
+
+      try {
+        const data = await getAllGallery();
+        setImages(data);
+      } catch {
+        toast.error("Refresh failed");
+      }
     } catch { toast.error("Save failed"); } finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this item?")) return;
-    try { await deleteGalleryImage(id); revalidateCache("gallery"); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
+    try {
+      await deleteGalleryImage(id);
+      revalidateCache("gallery");
+      toast.success("Deleted");
+
+      const data = await getAllGallery();
+      setImages(data);
+    } catch { toast.error("Delete failed"); }
   };
 
   const handleToggle = async (img: GalleryImage) => {
-    try { await updateGalleryImage(img.id, { isActive: !img.isActive }); revalidateCache("gallery"); load(); } catch { toast.error("Failed"); }
+    try {
+      await updateGalleryImage(img.id, { isActive: !img.isActive });
+      revalidateCache("gallery");
+
+      const data = await getAllGallery();
+      setImages(data);
+    } catch { toast.error("Failed"); }
   };
 
   const filtered = filterCat === "All" ? images : images.filter((i) => i.category === filterCat);

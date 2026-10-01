@@ -8,6 +8,7 @@ import AchievementsTeaser from "@/components/public/home/AchievementsTeaser";
 import TestimonialsTeaser from "@/components/public/home/TestimonialsTeaser";
 import PagesGrid from "@/components/public/home/PagesGrid";
 import HomeCTA from "@/components/public/home/HomeCTA";
+import Gallery from "@/components/public/Gallery";
 
 export default async function HomePage() {
   const [settingsRes, coursesRes, testimonialsRes, achievementsRes, resultsRes] = await Promise.allSettled([
@@ -35,6 +36,7 @@ export default async function HomePage() {
       <TestimonialsTeaser testimonials={testimonials} />
       <PagesGrid />
       <HomeCTA settings={settings} />
+      <Gallery gallery={[]} />
     </>
   );
 }

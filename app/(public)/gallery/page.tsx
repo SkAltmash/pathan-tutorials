@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Images, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
@@ -43,8 +43,13 @@ export default function GalleryPage() {
   const filtered =
     activeCategory === "All" ? images : images.filter((g) => g.category === activeCategory);
 
-  const prev = () => setLightbox((l) => (l !== null ? (l - 1 + filtered.length) % filtered.length : null));
-  const next = () => setLightbox((l) => (l !== null ? (l + 1) % filtered.length : null));
+  const prev = useCallback(() => {
+    setLightbox((l) => (l !== null ? (l - 1 + filtered.length) % filtered.length : null));
+  }, [filtered.length]);
+
+  const next = useCallback(() => {
+    setLightbox((l) => (l !== null ? (l + 1) % filtered.length : null));
+  }, [filtered.length]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -55,7 +60,7 @@ export default function GalleryPage() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [lightbox, filtered.length]);
+  }, [lightbox, next, prev]);
 
   return (
     <div className="pt-20 lg:pt-24">
@@ -123,8 +128,19 @@ export default function GalleryPage() {
                     onClick={() => setLightbox(idx)}
                     className="relative aspect-square rounded-xl overflow-hidden group bg-[var(--bg-surface)] border border-[var(--border)] hover:border-primary/30 transition-all focus:outline-none"
                   >
-                    {/* Thumbnail */}
-                    {thumb ? (
+                    {/* Thumbnail / reel preview */}
+                    {type === "instagram" && item.embedUrl ? (
+                      <div className="absolute inset-0 scale-[1.7] origin-center">
+                        <iframe
+                          src={`${item.embedUrl}&autoplay=1&mute=1&loop=1`}
+                          className="h-full w-full"
+                          style={{ border: 0, pointerEvents: "none" }}
+                          loading="lazy"
+                          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                          title={item.title}
+                        />
+                      </div>
+                    ) : thumb ? (
                       <Image
                         src={thumb}
                         alt={item.title}
@@ -212,35 +228,50 @@ export default function GalleryPage() {
               })()}
 
               {type === "instagram" && (
-                <div className="w-full max-w-xs mx-auto">
-                  <div className="relative rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#cc2366]">
-                    {item.thumbnailUrl ? (
-                      <div className="relative w-full" style={{ aspectRatio: "9/16", maxHeight: "55dvh" }}>
-                        <Image src={item.thumbnailUrl} alt={item.title} fill sizes="320px" className="object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center gap-4 py-20 px-8">
-                        <FaInstagram size={56} className="text-white drop-shadow-lg" />
-                        <p className="text-white font-700 text-lg text-center">{item.title}</p>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center">
-                        <FaInstagram size={28} className="text-white" />
-                      </div>
+                <div className="w-full max-w-md mx-auto">
+                  {item.embedUrl ? (
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+                      <iframe
+                        src={item.embedUrl}
+                        className="w-full h-[520px] sm:h-[620px]"
+                        style={{ border: 0 }}
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                        allowFullScreen
+                        title={item.title}
+                      />
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                      <p className="text-white font-600 text-sm truncate">{item.title}</p>
-                      <p className="text-white/60 text-xs mt-0.5">Instagram Reel</p>
+                  ) : (
+                    <div className="w-full max-w-xs mx-auto">
+                      <div className="relative rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#cc2366]">
+                        {item.thumbnailUrl ? (
+                          <div className="relative w-full" style={{ aspectRatio: "9/16", maxHeight: "55dvh" }}>
+                            <Image src={item.thumbnailUrl} alt={item.title} fill sizes="320px" className="object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center gap-4 py-20 px-8">
+                            <FaInstagram size={56} className="text-white drop-shadow-lg" />
+                            <p className="text-white font-700 text-lg text-center">{item.title}</p>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center">
+                            <FaInstagram size={28} className="text-white" />
+                          </div>
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                          <p className="text-white font-600 text-sm truncate">{item.title}</p>
+                          <p className="text-white/60 text-xs mt-0.5">Instagram Reel</p>
+                        </div>
+                      </div>
+                      <a href={item.url} target="_blank" rel="noopener noreferrer"
+                        className="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl font-600 text-white text-sm"
+                        style={{ background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366)" }}
+                      >
+                        <FaInstagram size={16} /> Watch Reel on Instagram
+                      </a>
                     </div>
-                  </div>
-                  <a href={item.url} target="_blank" rel="noopener noreferrer"
-                    className="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl font-600 text-white text-sm"
-                    style={{ background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366)" }}
-                  >
-                    <FaInstagram size={16} /> Watch Reel on Instagram
-                  </a>
+                  )}
                 </div>
               )}
 
