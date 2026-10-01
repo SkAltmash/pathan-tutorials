@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   description:
     "Premier mathematics coaching for 8th–12th CBSE & Maharashtra State Board, and MHT-CET preparation in Hinganghat. Join 500+ successful students.",
   keywords: "Pathan Tutorials, mathematics coaching, Hinganghat, CBSE, Maharashtra Board, MHT-CET, 10th maths, 12th maths",
+  icons: {
+    icon: "/logo-favicon.png",
+  },
   openGraph: {
     title: "Pathan Tutorials — Mathematics Coaching Hinganghat",
     description: "Expert mathematics coaching for class 8 to 12 and MHT-CET. Located in Hinganghat, Maharashtra.",

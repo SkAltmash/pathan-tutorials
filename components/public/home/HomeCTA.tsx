@@ -1,8 +1,17 @@
 import Link from "next/link";
 import { BookOpen, ArrowRight, Phone } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa6";
+import { SiteSettings } from "@/lib/types";
 
-export default function HomeCTA() {
+interface HomeCTAProps {
+  settings?: SiteSettings | null;
+}
+
+export default function HomeCTA({ settings }: HomeCTAProps) {
+  const phone    = settings?.phone    || "";
+  const whatsapp = settings?.whatsapp || settings?.phone || "";
+  const waNumber = whatsapp.replace(/\D/g, "").replace(/^(?!91)/, "91");
+
   return (
     <section className="py-16 sm:py-20 bg-[var(--bg-dark)] border-t border-[var(--border)]">
       <div className="container-custom text-center max-w-2xl mx-auto flex flex-col items-center gap-6 px-4">
@@ -21,17 +30,29 @@ export default function HomeCTA() {
           </Link>
           <Link href="/about" className="btn-outline justify-center">About Us</Link>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <a href="tel:9403553309"
-            className="flex items-center gap-2 text-primary font-bold text-lg hover:text-primary-light transition-colors">
-            <Phone size={18} /> 9403553309
-          </a>
-          <span className="hidden sm:block text-[var(--border)]">·</span>
-          <a href="https://wa.me/919403553309" target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 text-green-400 font-semibold hover:text-green-300 transition-colors">
-            <FaWhatsapp size={18} /> WhatsApp Us
-          </a>
-        </div>
+        {(phone || whatsapp) && (
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            {phone && (
+              <a
+                href={`tel:${phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-2 text-primary font-bold text-lg hover:text-primary-light transition-colors"
+              >
+                <Phone size={18} /> {phone}
+              </a>
+            )}
+            {phone && whatsapp && <span className="hidden sm:block text-[var(--border)]">·</span>}
+            {whatsapp && (
+              <a
+                href={`https://wa.me/${waNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-green-400 font-semibold hover:text-green-300 transition-colors"
+              >
+                <FaWhatsapp size={18} /> WhatsApp Us
+              </a>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

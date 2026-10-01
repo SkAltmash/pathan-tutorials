@@ -15,6 +15,9 @@ const WHY_US = [
 
 export default function WhyChooseUs({ settings }: { settings: SiteSettings | null }) {
   const sirPhoto = settings?.sir?.trim() || "";
+  const phone    = settings?.phone    || "";
+  const whatsapp = settings?.whatsapp || settings?.phone || "";
+  const waNumber = whatsapp.replace(/\D/g, "").replace(/^(?!91)/, "91");
 
   return (
     <section className="section-padding bg-[var(--bg-card)] border-b border-[var(--border)]">
@@ -75,7 +78,7 @@ export default function WhyChooseUs({ settings }: { settings: SiteSettings | nul
               /* Fallback logo */
               <div className="relative rounded-2xl overflow-hidden border border-[var(--border)] aspect-[4/3]">
                 <Image
-                  src="/logo.jpeg"
+                  src={settings?.logo || "/logo.jpeg"}
                   alt="Pathan Tutorials"
                   fill
                   sizes="(max-width:768px) 100vw, 50vw"
@@ -86,23 +89,32 @@ export default function WhyChooseUs({ settings }: { settings: SiteSettings | nul
 
             {/* Contact quick links */}
             <div className="grid grid-cols-2 gap-3">
-              <a href={`tel:${settings?.phone || "9403553309"}`}
-                className="flex items-center gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors">
-                <Phone size={18} className="text-primary" />
-                <div>
-                  <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wide">Call</p>
-                  <p className="text-sm font-bold text-white">{settings?.phone || "9403553309"}</p>
-                </div>
-              </a>
-              <a href={`https://wa.me/${(settings?.whatsapp || settings?.phone || "919403553309").replace(/\D/g, "")}`}
-                target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 transition-colors">
-                <FaWhatsapp size={20} className="text-green-400" />
-                <div>
-                  <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wide">WhatsApp</p>
-                  <p className="text-sm font-bold text-white">Message Us</p>
-                </div>
-              </a>
+              {phone && (
+                <a
+                  href={`tel:${phone.replace(/\s/g, "")}`}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors"
+                >
+                  <Phone size={18} className="text-primary" />
+                  <div>
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wide">Call</p>
+                    <p className="text-sm font-bold text-white">{phone}</p>
+                  </div>
+                </a>
+              )}
+              {whatsapp && (
+                <a
+                  href={`https://wa.me/${waNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 transition-colors"
+                >
+                  <FaWhatsapp size={20} className="text-green-400" />
+                  <div>
+                    <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wide">WhatsApp</p>
+                    <p className="text-sm font-bold text-white">Message Us</p>
+                  </div>
+                </a>
+              )}
               {settings?.address && (
                 <div className="col-span-2 flex items-start gap-3 p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)]">
                   <MapPin size={16} className="text-primary mt-0.5 flex-shrink-0" />

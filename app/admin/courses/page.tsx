@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const EMPTY: Omit<Course, "id"> = {
   name: "", class: "", board: "", subject: "Mathematics", description: "",
   duration: "", fees: "", image: "", features: [], ctaText: "Enquire Now",
-  ctaLink: "#contact", isActive: true, showOnHome: false, order: 0,
+  ctaLink: "/contact", isActive: true, showOnHome: false, order: 0,
 };
 
 type ModalState = { mode: "add" | "edit"; data: Course | Omit<Course, "id"> } | null;

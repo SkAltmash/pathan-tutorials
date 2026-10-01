@@ -17,7 +17,7 @@ export default async function PublicLayout({ children }: { children: React.React
       <Navbar nav={n} settings={s} />
       <main className="min-h-screen">{children}</main>
       <Footer settings={s} />
-      <FloatingButtons />
+      <FloatingButtons settings={s} />
     </>
   );
 }

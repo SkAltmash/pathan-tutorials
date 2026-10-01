@@ -34,7 +34,7 @@ export default async function HomePage() {
       <AchievementsTeaser achievements={achievements} />
       <TestimonialsTeaser testimonials={testimonials} />
       <PagesGrid />
-      <HomeCTA />
+      <HomeCTA settings={settings} />
     </>
   );
 }
