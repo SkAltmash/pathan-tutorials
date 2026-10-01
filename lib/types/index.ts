@@ -83,6 +83,7 @@ export interface Course {
   ctaText: string;
   ctaLink: string;
   isActive: boolean;
+  showOnHome: boolean;   // feature-flag: display this course in the home page section
   order: number;
   createdAt?: string;
   updatedAt?: string;
@@ -102,6 +103,7 @@ export interface StudentResult {
   resultImage: string;
   achievementDescription: string;
   isActive: boolean;
+  showOnHome: boolean;   // show this result in the home page section
   createdAt?: string;
   updatedAt?: string;
 }

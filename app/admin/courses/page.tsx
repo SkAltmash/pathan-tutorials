@@ -1,4 +1,5 @@
 "use client";
+import { revalidateCache } from "@/lib/bff/revalidate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -6,13 +7,13 @@ import AdminShell from "@/components/admin/AdminShell";
 import { getAllCourses, addCourse, updateCourse, deleteCourse } from "@/lib/firebase/firestore";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Course } from "@/lib/types";
-import { Plus, Pencil, Trash2, X, Save, Loader2, BookOpen, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Save, Loader2, BookOpen, ToggleLeft, ToggleRight, Pin } from "lucide-react";
 import toast from "react-hot-toast";
 
 const EMPTY: Omit<Course, "id"> = {
   name: "", class: "", board: "", subject: "Mathematics", description: "",
   duration: "", fees: "", image: "", features: [], ctaText: "Enquire Now",
-  ctaLink: "#contact", isActive: true, order: 0,
+  ctaLink: "#contact", isActive: true, showOnHome: false, order: 0,
 };
 
 type ModalState = { mode: "add" | "edit"; data: Course | Omit<Course, "id"> } | null;
@@ -53,17 +54,18 @@ export default function CoursesAdminPage() {
     try {
       if (modal.mode === "add") { await addCourse(data as Omit<Course, "id">); toast.success("Course added!"); }
       else { const { id, ...rest } = data as Course; await updateCourse(id, rest); toast.success("Course updated!"); }
+      revalidateCache("courses");
       setModal(null); load();
     } catch { toast.error("Save failed"); } finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this course?")) return;
-    try { await deleteCourse(id); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
+    try { await deleteCourse(id); revalidateCache("courses"); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
   };
 
   const handleToggle = async (course: Course) => {
-    try { await updateCourse(course.id, { isActive: !course.isActive }); load(); } catch { toast.error("Update failed"); }
+    try { await updateCourse(course.id, { isActive: !course.isActive }); revalidateCache("courses"); load(); } catch { toast.error("Update failed"); }
   };
 
   if (loading || !user) return <div className="min-h-screen bg-dark flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;
@@ -174,11 +176,24 @@ export default function CoursesAdminPage() {
               <div><label className="form-label">Description</label><textarea className="form-textarea" rows={3} value={d?.description || ""} onChange={(e) => set("description", e.target.value)} /></div>
               <div><label className="form-label">Features (one per line)</label><textarea className="form-textarea" rows={4} value={featuresText} onChange={(e) => setFeaturesText(e.target.value)} placeholder={"Weekly tests\nStudy material\nDoubt sessions"} /></div>
 
-              <ImageUpload label="Course Image" folder="courses" value={d?.image || ""} onChange={(url) => set("image", url)} aspectRatio="wide" />
+              <ImageUpload
+                label="Course Image (4:3)"
+                folder="courses"
+                value={d?.image || ""}
+                onChange={(url) => set("image", url)}
+                aspectRatio="four-three"
+                crop
+                cropAspect={4 / 3}
+              />
 
               <label className="flex items-center gap-2 cursor-pointer w-fit">
                 <input type="checkbox" checked={d?.isActive ?? true} onChange={(e) => set("isActive", e.target.checked)} className="w-4 h-4 accent-primary" />
                 <span className="text-sm text-[var(--text-secondary)]">Active (show on website)</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer w-fit">
+                <input type="checkbox" checked={d?.showOnHome ?? false} onChange={(e) => set("showOnHome", e.target.checked)} className="w-4 h-4 accent-primary" />
+                <span className="text-sm text-[var(--text-secondary)] flex items-center gap-1.5"><Pin size={13} className="text-primary" /> Show on Home Page <span className="text-[10px] text-[var(--text-muted)]">(requires image)</span></span>
               </label>
             </div>
 

@@ -1,4 +1,4 @@
-import { getCourses } from "@/lib/firebase/firestore";
+import { getCachedCourses } from "@/lib/bff/cache";
 import Link from "next/link";
 import Image from "next/image";
 import { BookOpen, Clock, CheckCircle2, ArrowRight } from "lucide-react";
@@ -6,7 +6,7 @@ import { BookOpen, Clock, CheckCircle2, ArrowRight } from "lucide-react";
 export const metadata = { title: "Courses — Pathan Tutorials" };
 
 export default async function CoursesPage() {
-  const courses = await getCourses().catch(() => []);
+  const courses = await getCachedCourses().catch(() => []);
 
   return (
     <div className="pt-20 lg:pt-24">
@@ -42,7 +42,7 @@ export default async function CoursesPage() {
                 <div key={course.id} className="card-glass flex flex-col overflow-hidden group">
                   {/* Image */}
                   {course.image ? (
-                    <div className="relative aspect-video overflow-hidden">
+                    <div className="relative aspect-[4/3] overflow-hidden">
                       <Image src={course.image} alt={course.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                       <div className="absolute bottom-3 left-3">
@@ -50,7 +50,7 @@ export default async function CoursesPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="aspect-video bg-primary/5 border-b border-[var(--border)] flex items-center justify-center relative">
+                    <div className="aspect-[4/3] bg-primary/5 border-b border-[var(--border)] flex items-center justify-center relative">
                       <BookOpen size={36} className="text-primary/30" />
                       <div className="absolute bottom-3 left-3">
                         <span className="badge badge-yellow">{course.class}</span>

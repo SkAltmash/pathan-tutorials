@@ -1,4 +1,5 @@
 "use client";
+import { revalidateCache } from "@/lib/bff/revalidate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -109,10 +110,11 @@ export default function GalleryAdminPage() {
     try {
       if (modal.mode === "add") {
         await addGalleryImage(modal.data as Omit<GalleryImage, "id">);
-        toast.success("Added!");
+        toast.success("Added!"); revalidateCache("gallery");
       } else {
         const { id, ...rest } = modal.data as GalleryImage;
         await updateGalleryImage(id, rest);
+        revalidateCache("gallery");
         toast.success("Updated!");
       }
       setModal(null); load();
@@ -121,11 +123,11 @@ export default function GalleryAdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this item?")) return;
-    try { await deleteGalleryImage(id); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
+    try { await deleteGalleryImage(id); revalidateCache("gallery"); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
   };
 
   const handleToggle = async (img: GalleryImage) => {
-    try { await updateGalleryImage(img.id, { isActive: !img.isActive }); load(); } catch { toast.error("Failed"); }
+    try { await updateGalleryImage(img.id, { isActive: !img.isActive }); revalidateCache("gallery"); load(); } catch { toast.error("Failed"); }
   };
 
   const filtered = filterCat === "All" ? images : images.filter((i) => i.category === filterCat);

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Images, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
-import { getGallery } from "@/lib/firebase/firestore";
 import { GalleryImage, GalleryCategory } from "@/lib/types";
 
 const CATEGORIES: (GalleryCategory | "All")[] = [
@@ -34,7 +33,8 @@ export default function GalleryPage() {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   useEffect(() => {
-    getGallery()
+    fetch("/api/gallery")
+      .then((r) => r.json())
       .then(setImages)
       .catch(() => setImages([]))
       .finally(() => setLoading(false));

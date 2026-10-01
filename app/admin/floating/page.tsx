@@ -5,7 +5,8 @@ import { useAuth } from "@/lib/context/AuthContext";
 import AdminShell from "@/components/admin/AdminShell";
 import { getFloatingButtons, saveFloatingButtons } from "@/lib/firebase/firestore";
 import { FloatingButtonsSettings, FloatingButton } from "@/lib/types";
-import { Save, Loader2, MessageCircle, Phone, Camera } from "lucide-react";
+import { Save, Loader2, Phone } from "lucide-react";
+import { FaWhatsapp, FaInstagram } from "react-icons/fa6";
 import toast from "react-hot-toast";
 
 const EMPTY: FloatingButtonsSettings = {
@@ -41,9 +42,9 @@ export default function FloatingAdminPage() {
   if (loading || !user) return <div className="min-h-screen bg-dark flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;
 
   const buttons = [
-    { key: "whatsapp" as keyof FloatingButtonsSettings, label: "WhatsApp", icon: MessageCircle, placeholder: "+919876543210 (no spaces)" },
+    { key: "whatsapp" as keyof FloatingButtonsSettings, label: "WhatsApp", icon: FaWhatsapp, placeholder: "+919876543210 (no spaces)" },
     { key: "call" as keyof FloatingButtonsSettings, label: "Call Button", icon: Phone, placeholder: "+919876543210" },
-    { key: "instagram" as keyof FloatingButtonsSettings, label: "Instagram", icon: Camera, placeholder: "https://instagram.com/..." },
+    { key: "instagram" as keyof FloatingButtonsSettings, label: "Instagram", icon: FaInstagram, placeholder: "https://instagram.com/..." },
   ];
 
   return (

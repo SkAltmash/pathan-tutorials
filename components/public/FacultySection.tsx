@@ -7,7 +7,7 @@ const DEFAULT_FACULTY: Faculty[] = [
     id: "1", name: "Mr. Pathan Sir", subject: "Mathematics (All Classes)",
     qualification: "M.Sc. Mathematics, B.Ed.", experience: "10+ Years",
     bio: "Founder and lead mathematics faculty with expertise in CBSE, State Board and MHT-CET curriculum. Known for making complex concepts simple.",
-    profileImage: "/logo.jpg", instagramUrl: "https://www.instagram.com/pathantutorials/",
+    profileImage: "/logo.jpeg", instagramUrl: "https://www.instagram.com/pathantutorials/",
     linkedinUrl: "", youtubeUrl: "", order: 1, isActive: true,
   },
 ];

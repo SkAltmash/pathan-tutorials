@@ -1,11 +1,11 @@
-import { getFaculty } from "@/lib/firebase/firestore";
+import { getCachedFaculty } from "@/lib/bff/cache";
 import Image from "next/image";
 import { GraduationCap, AtSign, Link2, PlayCircle } from "lucide-react";
 
 export const metadata = { title: "Faculty — Pathan Tutorials" };
 
 export default async function FacultyPage() {
-  const faculty = await getFaculty().catch(() => []);
+  const faculty = await getCachedFaculty().catch(() => []);
 
   return (
     <div className="pt-20 lg:pt-24">

@@ -1,12 +1,13 @@
-import { getSiteSettings } from "@/lib/firebase/firestore";
+import { getCachedSiteSettings } from "@/lib/bff/cache";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone, MessageCircle, Mail, Clock, ArrowRight } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 
 export const metadata = { title: "About Us — Pathan Tutorials" };
 
 export default async function AboutPage() {
-  const settings = await getSiteSettings().catch(() => null);
+  const settings = await getCachedSiteSettings().catch(() => null);
 
   return (
     <div className="pt-20 lg:pt-24">
@@ -74,7 +75,7 @@ export default async function AboutPage() {
                     target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-3 text-sm text-[var(--text-secondary)] hover:text-green-400 transition-colors">
                     <div className="w-9 h-9 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center flex-shrink-0">
-                      <MessageCircle size={16} className="text-green-500" />
+                      <FaWhatsapp size={18} className="text-green-500" />
                     </div>
                     <span>{settings.whatsapp}</span>
                   </a>

@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
           {/* Logo */}
           <div className="flex flex-col items-center gap-4 mb-8">
             <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-primary/30 ring-4 ring-primary/10">
-              <Image src="/logo.jpg" alt="Pathan Tutorials" fill className="object-cover" priority />
+              <Image src="/logo.jpeg" alt="Pathan Tutorials" fill className="object-cover" priority />
             </div>
             <div className="text-center">
               <h1 className="font-display font-800 text-2xl text-white">Admin Panel</h1>

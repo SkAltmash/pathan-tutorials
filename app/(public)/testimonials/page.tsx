@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Star, Quote, User } from "lucide-react";
-import { getTestimonials } from "@/lib/firebase/firestore";
 import { Testimonial } from "@/lib/types";
 
 export default function TestimonialsPage() {
@@ -10,7 +9,8 @@ export default function TestimonialsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTestimonials()
+    fetch("/api/testimonials")
+      .then((r) => r.json())
       .then(setTestimonials)
       .catch(() => setTestimonials([]))
       .finally(() => setLoading(false));

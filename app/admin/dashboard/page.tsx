@@ -83,7 +83,7 @@ export default function DashboardPage() {
       {/* Welcome */}
       <div className="mb-6">
         <h2 className="font-display font-800 text-xl text-white">
-          Welcome back 👋
+          Welcome back
         </h2>
         <p className="text-sm text-[var(--text-secondary)] mt-1">
           Here's what's happening at Pathan Tutorials today.

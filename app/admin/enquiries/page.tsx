@@ -5,7 +5,8 @@ import { useAuth } from "@/lib/context/AuthContext";
 import AdminShell from "@/components/admin/AdminShell";
 import { getEnquiries, updateEnquiry } from "@/lib/firebase/firestore";
 import { Enquiry, EnquiryStatus } from "@/lib/types";
-import { Phone, MessageCircle, Mail, Search, X, ChevronRight, User } from "lucide-react";
+import { Phone, Mail, Search, X, ChevronRight, User } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 import toast from "react-hot-toast";
 
 const STATUSES: EnquiryStatus[] = ["New", "Contacted", "Follow-up", "Converted", "Closed"];
@@ -220,7 +221,7 @@ function EnquiryDetail({
         {enq.whatsapp && (
           <a href={`https://wa.me/${enq.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer"
             className="btn-outline btn-sm justify-center" style={{ borderColor: "#25d366", color: "#25d366" }}>
-            <MessageCircle size={14} /> WhatsApp
+            <FaWhatsapp size={14} /> WhatsApp
           </a>
         )}
         {enq.email && (

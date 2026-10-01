@@ -1,4 +1,5 @@
 "use client";
+import { revalidateCache } from "@/lib/bff/revalidate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -6,13 +7,13 @@ import AdminShell from "@/components/admin/AdminShell";
 import { getAllResults, addResult, updateResult, deleteResult } from "@/lib/firebase/firestore";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { StudentResult } from "@/lib/types";
-import { Plus, Pencil, Trash2, X, Save, Loader2, Trophy, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Save, Loader2, Trophy, ToggleLeft, ToggleRight, Pin } from "lucide-react";
 import toast from "react-hot-toast";
 
 const EMPTY: Omit<StudentResult, "id"> = {
   studentName: "", class: "", exam: "", year: new Date().getFullYear().toString(),
   percentage: "", marks: "", rank: "", studentPhoto: "", resultImage: "",
-  achievementDescription: "", isActive: true,
+  achievementDescription: "", isActive: true, showOnHome: false,
 };
 
 type ModalState = { mode: "add" | "edit"; data: StudentResult | Omit<StudentResult, "id"> } | null;
@@ -40,19 +41,19 @@ export default function ResultsAdminPage() {
     if (!modal) return;
     setSaving(true);
     try {
-      if (modal.mode === "add") { await addResult(modal.data as Omit<StudentResult, "id">); toast.success("Result added!"); }
-      else { const { id, ...rest } = modal.data as StudentResult; await updateResult(id, rest); toast.success("Updated!"); }
+      if (modal.mode === "add") { await addResult(modal.data as Omit<StudentResult, "id">); toast.success("Result added!"); revalidateCache("results");}
+      else { const { id, ...rest } = modal.data as StudentResult; await updateResult(id, rest); revalidateCache("results"); toast.success("Updated!"); }
       setModal(null); load();
     } catch { toast.error("Save failed"); } finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this result?")) return;
-    try { await deleteResult(id); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
+    try { await deleteResult(id); revalidateCache("results"); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
   };
 
   const handleToggle = async (item: StudentResult) => {
-    try { await updateResult(item.id, { isActive: !item.isActive }); load(); } catch { toast.error("Update failed"); }
+    try { await updateResult(item.id, { isActive: !item.isActive }); revalidateCache("results"); load(); } catch { toast.error("Update failed"); }
   };
 
   if (loading || !user) return <div className="min-h-screen bg-dark flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;
@@ -164,13 +165,34 @@ export default function ResultsAdminPage() {
               <div><label className="form-label">Achievement Description</label><textarea className="form-textarea" rows={2} value={d?.achievementDescription || ""} onChange={(e) => set("achievementDescription", e.target.value)} /></div>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <ImageUpload label="Student Photo" folder="students" value={d?.studentPhoto || ""} onChange={(url) => set("studentPhoto", url)} aspectRatio="square" />
-                <ImageUpload label="Result Certificate" folder="results" value={d?.resultImage || ""} onChange={(url) => set("resultImage", url)} aspectRatio="wide" />
+                <ImageUpload
+                  label="Student Photo (1:1)"
+                  folder="students"
+                  value={d?.studentPhoto || ""}
+                  onChange={(url) => set("studentPhoto", url)}
+                  aspectRatio="square"
+                  crop
+                  cropAspect={1}
+                />
+                <ImageUpload
+                  label="Result Certificate (4:3)"
+                  folder="results"
+                  value={d?.resultImage || ""}
+                  onChange={(url) => set("resultImage", url)}
+                  aspectRatio="four-three"
+                  crop
+                  cropAspect={4 / 3}
+                />
               </div>
 
               <label className="flex items-center gap-2 cursor-pointer w-fit">
                 <input type="checkbox" checked={d?.isActive ?? true} onChange={(e) => set("isActive", e.target.checked)} className="w-4 h-4 accent-primary" />
                 <span className="text-sm text-[var(--text-secondary)]">Active (show on website)</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer w-fit">
+                <input type="checkbox" checked={d?.showOnHome ?? false} onChange={(e) => set("showOnHome", e.target.checked)} className="w-4 h-4 accent-primary" />
+                <span className="text-sm text-[var(--text-secondary)] flex items-center gap-1.5"><Pin size={13} className="text-primary" /> Show on Home Page <span className="text-[10px] text-[var(--text-muted)]">(requires student photo)</span></span>
               </label>
             </div>
 

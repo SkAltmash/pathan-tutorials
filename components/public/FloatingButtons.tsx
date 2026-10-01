@@ -1,5 +1,6 @@
 "use client";
-import { MessageCircle, Phone, Camera } from "lucide-react";
+import { Phone } from "lucide-react";
+import { FaWhatsapp, FaInstagram } from "react-icons/fa6";
 
 const PHONE = "9403553309";
 const WHATSAPP = "919403553309"; // international format for wa.me
@@ -21,7 +22,7 @@ export default function FloatingButtons() {
         title="Follow on Instagram"
         aria-label="Instagram"
       >
-        <Camera size={22} color="white" />
+        <FaInstagram size={22} color="white" />
       </a>
 
       {/* Call */}
@@ -44,7 +45,7 @@ export default function FloatingButtons() {
         title="Chat on WhatsApp"
         aria-label="WhatsApp"
       >
-        <MessageCircle size={22} color="white" />
+        <FaWhatsapp size={24} color="white" />
       </a>
     </div>
   );

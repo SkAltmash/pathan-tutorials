@@ -8,28 +8,28 @@ const DEFAULT_COURSES: Course[] = [
     subject: "Mathematics", description: "Strong foundation building with NCERT concepts, board pattern practice.",
     duration: "Academic Year", fees: "Contact Us", image: "", ctaText: "Enquire", ctaLink: "#contact",
     features: ["Complete NCERT coverage", "Weekly tests", "Doubt sessions", "Study material"],
-    isActive: true, order: 1,
+    isActive: true, showOnHome: false, order: 1,
   },
   {
     id: "2", name: "9th & 10th Mathematics", class: "9th & 10th", board: "CBSE & State Board",
     subject: "Mathematics", description: "Board exam focused preparation with previous year papers and mock tests.",
     duration: "Academic Year", fees: "Contact Us", image: "", ctaText: "Enquire", ctaLink: "#contact",
     features: ["Board pattern practice", "Mock exams", "Error analysis", "Parent updates"],
-    isActive: true, order: 2,
+    isActive: true, showOnHome: false, order: 2,
   },
   {
     id: "3", name: "11th & 12th Science Math", class: "11th & 12th", board: "State Board & CBSE",
     subject: "Mathematics", description: "Advanced mathematics for Science stream with calculus, algebra & more.",
     duration: "Academic Year", fees: "Contact Us", image: "", ctaText: "Enquire", ctaLink: "#contact",
     features: ["Calculus & Algebra", "Physics Math correlation", "Board + JEE basics", "Regular tests"],
-    isActive: true, order: 3,
+    isActive: true, showOnHome: false, order: 3,
   },
   {
     id: "4", name: "MHT-CET Mathematics", class: "12th / Dropper", board: "MHT-CET",
     subject: "Mathematics", description: "Intensive MHT-CET mathematics preparation with topic-wise strategy.",
     duration: "6-12 Months", fees: "Contact Us", image: "", ctaText: "Enquire", ctaLink: "#contact",
     features: ["Topic-wise strategy", "1000+ MCQ practice", "Mock CET tests", "Score analysis"],
-    isActive: true, order: 4,
+    isActive: true, showOnHome: false, order: 4,
   },
 ];
 

@@ -1,16 +1,18 @@
 "use client";
+import { revalidateCache } from "@/lib/bff/revalidate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import AdminShell from "@/components/admin/AdminShell";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { getSiteSettings, saveSiteSettings } from "@/lib/firebase/firestore";
 import { SiteSettings } from "@/lib/types";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Info } from "lucide-react";
 import toast from "react-hot-toast";
 
 const EMPTY: SiteSettings = {
   siteName: "Pathan Tutorials", tagline: "Excellence in Mathematics",
-  description: "", logo: "/logo.jpg", sir: "", favicon: "", phone: "", whatsapp: "",
+  description: "", logo: "/logo.jpeg", sir: "", favicon: "", phone: "", whatsapp: "",
   email: "", address: "", googleMapsUrl: "", instagramUrl: "", facebookUrl: "",
   youtubeUrl: "", telegramUrl: "", linkedinUrl: "", openingHours: "",
   footerDescription: "", footerCopyright: "",
@@ -42,6 +44,8 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       await saveSiteSettings(form);
+      revalidateCache("settings");
+      revalidateCache("navigation");
       toast.success("Settings saved successfully!");
     } catch {
       toast.error("Failed to save settings.");
@@ -58,6 +62,30 @@ export default function SettingsPage() {
     <AdminShell title="Site Settings">
       <div className="max-w-3xl space-y-6">
 
+
+        {/* ── Branding & Photos ─────────────────────── */}
+        <div className="admin-card space-y-4">
+          <h3 className="font-display font-700 text-base text-white border-b border-[var(--border)] pb-3">Branding &amp; Photos</h3>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <ImageUpload
+              label="Site Logo"
+              folder="branding"
+              value={form.logo}
+              onChange={(url) => set("logo", url)}
+              aspectRatio="square"
+            />
+            <ImageUpload
+              label="Teacher / Sir Photo (4:3)"
+              folder="branding"
+              value={form.sir}
+              onChange={(url) => set("sir", url)}
+              aspectRatio="four-three"
+              crop
+              cropAspect={4 / 3}
+            />
+          </div>
+          <p className="text-xs text-[var(--text-muted)] flex items-center gap-1.5"><Info size={13} className="text-primary flex-shrink-0" /> Teacher photo is shown in the <strong className="text-white ml-0.5">Why Choose Us</strong> section on the home page.</p>
+        </div>
 
         <div className="admin-card space-y-4">
           <h3 className="font-display font-700 text-base text-white border-b border-[var(--border)] pb-3">Contact Details</h3>

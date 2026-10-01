@@ -1,24 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Award, Users, CheckCircle2, BookOpen, Trophy, GraduationCap, Phone, MessageCircle, ArrowRight, MapPin, Clock } from "lucide-react";
+import { Award, Users, CheckCircle2, BookOpen, Trophy, GraduationCap, Phone, ArrowRight, MapPin, Clock } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 import { SiteSettings } from "@/lib/types";
 
 const WHY_US = [
-  { icon: Award,         text: "10+ Years of Excellence" },
-  { icon: Users,         text: "500+ Students Taught" },
-  { icon: CheckCircle2,  text: "CBSE & State Board Expert" },
-  { icon: BookOpen,      text: "MHT-CET Specialist" },
-  { icon: Trophy,        text: "95%+ Success Rate" },
-  { icon: GraduationCap, text: "Individual Attention" },
+  { icon: Award,          text: "10+ Years of Excellence" },
+  { icon: Users,          text: "500+ Students Taught" },
+  { icon: CheckCircle2,   text: "CBSE & State Board Expert" },
+  { icon: BookOpen,       text: "MHT-CET Specialist" },
+  { icon: Trophy,         text: "95%+ Success Rate" },
+  { icon: GraduationCap,  text: "Individual Attention" },
 ];
 
 export default function WhyChooseUs({ settings }: { settings: SiteSettings | null }) {
+  const sirPhoto = settings?.sir?.trim() || "";
+
   return (
     <section className="section-padding bg-[var(--bg-card)] border-b border-[var(--border)]">
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center">
 
-          {/* Left */}
+          {/* ── Left: text + points ──────────────────────── */}
           <div>
             <span className="section-badge mb-4 inline-flex"><Award size={13} /> Why Choose Us</span>
             <h2 className="section-title mb-4">
@@ -44,29 +47,57 @@ export default function WhyChooseUs({ settings }: { settings: SiteSettings | nul
             </div>
           </div>
 
-          {/* Right */}
+          {/* ── Right: Teacher photo or logo ─────────────── */}
           <div className="flex flex-col gap-4">
-            <div className="relative rounded-2xl overflow-hidden border border-[var(--border)] aspect-video">
-              <Image
-                src="/logo.jpg"
-                alt="Pathan Tutorials"
-                fill
-                sizes="(max-width:768px) 100vw, 50vw"
-                className="object-contain bg-[var(--bg-surface)] p-6"
-              />
-            </div>
+
+            {/* Teacher / Sir photo card */}
+            {sirPhoto ? (
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--border)] shadow-xl group">
+                <Image
+                  src={sirPhoto}
+                  alt="Teacher at Pathan Tutorials"
+                  fill
+                  sizes="(max-width:768px) 100vw, 50vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                {/* subtle gradient overlay at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white font-display font-bold text-sm drop-shadow">
+                    {settings?.siteName || "Pathan Tutorials"}
+                  </p>
+                  {settings?.tagline && (
+                    <p className="text-white/70 text-xs mt-0.5 drop-shadow">{settings.tagline}</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* Fallback logo */
+              <div className="relative rounded-2xl overflow-hidden border border-[var(--border)] aspect-[4/3]">
+                <Image
+                  src="/logo.jpeg"
+                  alt="Pathan Tutorials"
+                  fill
+                  sizes="(max-width:768px) 100vw, 50vw"
+                  className="object-contain bg-[var(--bg-surface)] p-6"
+                />
+              </div>
+            )}
+
+            {/* Contact quick links */}
             <div className="grid grid-cols-2 gap-3">
-              <a href="tel:9403553309"
+              <a href={`tel:${settings?.phone || "9403553309"}`}
                 className="flex items-center gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors">
                 <Phone size={18} className="text-primary" />
                 <div>
                   <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wide">Call</p>
-                  <p className="text-sm font-bold text-white">9403553309</p>
+                  <p className="text-sm font-bold text-white">{settings?.phone || "9403553309"}</p>
                 </div>
               </a>
-              <a href="https://wa.me/919403553309" target="_blank" rel="noopener noreferrer"
+              <a href={`https://wa.me/${(settings?.whatsapp || settings?.phone || "919403553309").replace(/\D/g, "")}`}
+                target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 transition-colors">
-                <MessageCircle size={18} className="text-green-400" />
+                <FaWhatsapp size={20} className="text-green-400" />
                 <div>
                   <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wide">WhatsApp</p>
                   <p className="text-sm font-bold text-white">Message Us</p>

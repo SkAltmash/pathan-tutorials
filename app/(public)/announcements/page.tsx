@@ -1,11 +1,11 @@
-import { getAnnouncements } from "@/lib/firebase/firestore";
+import { getCachedAnnouncements } from "@/lib/bff/cache";
 import { Bell, Calendar, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = { title: "Announcements — Pathan Tutorials" };
 
 export default async function AnnouncementsPage() {
-  const announcements = await getAnnouncements().catch(() => []);
+  const announcements = await getCachedAnnouncements().catch(() => []);
 
   return (
     <div className="pt-20 lg:pt-24">

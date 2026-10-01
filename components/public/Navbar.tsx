@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Menu, X, Phone, MessageCircle,
+  Menu, X, Phone,
   Home, Info, BookOpen, Award, Users, Image as ImageIcon,
   Megaphone, Mail,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 import { NavigationSettings, SiteSettings } from "@/lib/types";
 
 interface NavbarProps {
@@ -16,14 +17,14 @@ interface NavbarProps {
 }
 
 const DEFAULT_MENU = [
-  { id: "home",          label: "Home",          href: "/",             icon: Home },
-  { id: "about",         label: "About",         href: "/about",        icon: Info },
-  { id: "courses",       label: "Courses",       href: "/courses",      icon: BookOpen },
-  { id: "results",       label: "Results",       href: "/results",      icon: Award },
-  { id: "faculty",       label: "Faculty",       href: "/faculty",      icon: Users },
-  { id: "gallery",       label: "Gallery",       href: "/gallery",      icon: ImageIcon },
-  { id: "announcements", label: "Announcements", href: "/announcements",icon: Megaphone },
-  { id: "contact",       label: "Contact",       href: "/contact",      icon: Mail },
+  { id: "home", label: "Home", href: "/", icon: Home },
+  { id: "about", label: "About", href: "/about", icon: Info },
+  { id: "courses", label: "Courses", href: "/courses", icon: BookOpen },
+  { id: "results", label: "Results", href: "/results", icon: Award },
+  { id: "faculty", label: "Faculty", href: "/faculty", icon: Users },
+  { id: "gallery", label: "Gallery", href: "/gallery", icon: ImageIcon },
+  { id: "announcements", label: "Announcements", href: "/announcements", icon: Megaphone },
+  { id: "contact", label: "Contact", href: "/contact", icon: Mail },
 ];
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -32,9 +33,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 export default function Navbar({ nav, settings }: NavbarProps) {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const pathname                  = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   // Scroll detection
   useEffect(() => {
@@ -52,12 +53,12 @@ export default function Navbar({ nav, settings }: NavbarProps) {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  const logo     = nav?.logo    || settings?.logo    || "/logo.jpg";
+  const logo = nav?.logo || settings?.logo || "/logo.jpeg";
   const siteName = settings?.siteName || "Pathan Tutorials";
-  const tagline  = settings?.tagline  || "Excellence in Mathematics";
-  const ctaText  = nav?.ctaText || "Enquire Now";
-  const ctaLink  = nav?.ctaLink || "/contact";
-  const phone    = settings?.phone    || "";
+  const tagline = settings?.tagline || "Excellence in Mathematics";
+  const ctaText = nav?.ctaText || "Enquire Now";
+  const ctaLink = nav?.ctaLink || "/contact";
+  const phone = settings?.phone || "";
   const whatsapp = settings?.whatsapp || "";
 
   const sanitizeHref = (href: string) =>
@@ -66,13 +67,13 @@ export default function Navbar({ nav, settings }: NavbarProps) {
   const menuItems =
     nav?.items && nav.items.length > 0
       ? nav.items
-          .filter((i) => i.isActive)
-          .sort((a, b) => a.order - b.order)
-          .map((i) => ({
-            ...i,
-            href: sanitizeHref(i.href),
-            icon: ICON_MAP[i.id] || Home,
-          }))
+        .filter((i) => i.isActive)
+        .sort((a, b) => a.order - b.order)
+        .map((i) => ({
+          ...i,
+          href: sanitizeHref(i.href),
+          icon: ICON_MAP[i.id] || Home,
+        }))
       : DEFAULT_MENU.map((m, i) => ({ ...m, href: sanitizeHref(m.href), order: i + 1, isActive: true }));
 
   const isActive = (href: string) =>
@@ -82,13 +83,12 @@ export default function Navbar({ nav, settings }: NavbarProps) {
     <>
       {/* ── Fixed Header ──────────────────────────────────────────── */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          menuOpen
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${menuOpen
             ? "-translate-y-full opacity-0 pointer-events-none"
             : scrolled
-            ? "nav-blur shadow-lg shadow-black/20 translate-y-0 opacity-100"
-            : "bg-transparent translate-y-0 opacity-100"
-        }`}
+              ? "nav-blur shadow-lg shadow-black/20 translate-y-0 opacity-100"
+              : "bg-transparent translate-y-0 opacity-100"
+          }`}
       >
         <div className="container-custom flex items-center justify-between h-16 lg:h-20">
 
@@ -113,11 +113,10 @@ export default function Navbar({ nav, settings }: NavbarProps) {
               <Link
                 key={item.id}
                 href={item.href}
-                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  isActive(item.href)
+                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isActive(item.href)
                     ? "bg-primary/15 text-primary border border-primary/25"
                     : "text-[var(--text-secondary)] hover:text-white hover:bg-white/6"
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>
@@ -164,24 +163,21 @@ export default function Navbar({ nav, settings }: NavbarProps) {
 
       {/* ── Mobile Drawer Overlay ────────────────────────────────── */}
       <div
-        className={`fixed inset-0 z-40 lg:hidden transition-all duration-300 ${
-          menuOpen ? "visible" : "invisible"
-        }`}
+        className={`fixed inset-0 z-40 lg:hidden transition-all duration-300 ${menuOpen ? "visible" : "invisible"
+          }`}
         aria-hidden={!menuOpen}
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-            menuOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100" : "opacity-0"
+            }`}
           onClick={() => setMenuOpen(false)}
         />
 
         {/* Drawer panel */}
         <div
-          className={`absolute top-0 right-0 h-full w-[300px] max-w-[85vw] nav-blur border-l border-[var(--border)] flex flex-col transition-transform duration-300 ease-in-out ${
-            menuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`absolute top-0 right-0 h-full w-[300px] max-w-[85vw] nav-blur border-l border-[var(--border)] flex flex-col transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
         >
           {/* Drawer header */}
           <div className="flex items-center justify-between px-5 h-16 border-b border-[var(--border)] flex-shrink-0">
@@ -209,11 +205,10 @@ export default function Navbar({ nav, settings }: NavbarProps) {
                   key={item.id}
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 mb-1 ${
-                    isActive(item.href)
+                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 mb-1 ${isActive(item.href)
                       ? "bg-primary/15 text-primary border border-primary/20"
                       : "text-[var(--text-secondary)] hover:text-white hover:bg-white/6"
-                  }`}
+                    }`}
                   style={{ animationDelay: `${idx * 40}ms` }}
                 >
                   <Icon size={17} className={isActive(item.href) ? "text-primary" : "text-[var(--text-muted)]"} />
@@ -246,7 +241,7 @@ export default function Navbar({ nav, settings }: NavbarProps) {
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#25d366]/30 text-sm text-[#25d366] hover:bg-[#25d366]/10 transition-all"
                 >
-                  <MessageCircle size={15} />
+                  <FaWhatsapp size={16} />
                   <span className="font-medium">WhatsApp</span>
                 </a>
               )}

@@ -1,4 +1,5 @@
 "use client";
+import { revalidateCache } from "@/lib/bff/revalidate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -33,15 +34,15 @@ export default function AnnouncementsAdminPage() {
     if (!modal) return;
     setSaving(true);
     try {
-      if (modal.mode === "add") { await addAnnouncement(modal.data as Omit<Announcement, "id">); toast.success("Added!"); }
-      else { const { id, ...rest } = modal.data as Announcement; await updateAnnouncement(id, rest); toast.success("Updated!"); }
+      if (modal.mode === "add") { await addAnnouncement(modal.data as Omit<Announcement, "id">); toast.success("Added!"); revalidateCache("announcements"); }
+      else { const { id, ...rest } = modal.data as Announcement; await updateAnnouncement(id, rest); revalidateCache("announcements"); toast.success("Updated!"); }
       setModal(null); load();
     } catch { toast.error("Save failed"); } finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete?")) return;
-    try { await deleteAnnouncement(id); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
+    try { await deleteAnnouncement(id); revalidateCache("announcements"); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
   };
 
   if (loading || !user) return <div className="min-h-screen bg-dark flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;

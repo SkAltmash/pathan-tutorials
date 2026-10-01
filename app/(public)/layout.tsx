@@ -1,12 +1,12 @@
-import { getSiteSettings, getNavigationSettings } from "@/lib/firebase/firestore";
+import { getCachedSiteSettings, getCachedNavigationSettings } from "@/lib/bff/cache";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import FloatingButtons from "@/components/public/FloatingButtons";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const [settings, nav] = await Promise.allSettled([
-    getSiteSettings(),
-    getNavigationSettings(),
+    getCachedSiteSettings(),
+    getCachedNavigationSettings(),
   ]);
 
   const s = settings.status === "fulfilled" ? settings.value : null;

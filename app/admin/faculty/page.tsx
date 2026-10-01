@@ -1,4 +1,5 @@
 "use client";
+import { revalidateCache } from "@/lib/bff/revalidate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -36,15 +37,15 @@ export default function FacultyAdminPage() {
     if (!modal) return;
     setSaving(true);
     try {
-      if (modal.mode === "add") { await addFaculty(modal.data as Omit<Faculty, "id">); toast.success("Faculty added!"); }
-      else { const { id, ...rest } = modal.data as Faculty; await updateFaculty(id, rest); toast.success("Updated!"); }
+      if (modal.mode === "add") { await addFaculty(modal.data as Omit<Faculty, "id">); toast.success("Faculty added!"); revalidateCache("faculty");}
+      else { const { id, ...rest } = modal.data as Faculty; await updateFaculty(id, rest); revalidateCache("faculty"); toast.success("Updated!"); }
       setModal(null); load();
     } catch { toast.error("Save failed"); } finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete?")) return;
-    try { await deleteFaculty(id); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
+    try { await deleteFaculty(id); revalidateCache("faculty"); toast.success("Deleted"); load(); } catch { toast.error("Delete failed"); }
   };
 
   if (loading || !user) return <div className="min-h-screen bg-dark flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;
@@ -89,7 +90,7 @@ export default function FacultyAdminPage() {
                 </div>
                 {/* Actions */}
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <button onClick={() => { updateFaculty(item.id, { isActive: !item.isActive }).then(load); }}>
+                  <button onClick={() => { updateFaculty(item.id, { isActive: !item.isActive }).then(() => { revalidateCache("faculty"); load(); }); }}>
                     {item.isActive ? <ToggleRight size={22} className="text-green-500" /> : <ToggleLeft size={22} className="text-[var(--text-muted)]" />}
                   </button>
                   <button onClick={() => setModal({ mode: "edit", data: { ...item } })} className="p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"><Pencil size={13} /></button>

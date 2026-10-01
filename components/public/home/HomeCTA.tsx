@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BookOpen, ArrowRight } from "lucide-react";
+import { BookOpen, ArrowRight, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 
 export default function HomeCTA() {
   return (
@@ -23,12 +24,12 @@ export default function HomeCTA() {
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <a href="tel:9403553309"
             className="flex items-center gap-2 text-primary font-bold text-lg hover:text-primary-light transition-colors">
-            📞 9403553309
+            <Phone size={18} /> 9403553309
           </a>
           <span className="hidden sm:block text-[var(--border)]">·</span>
           <a href="https://wa.me/919403553309" target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2 text-green-400 font-semibold hover:text-green-300 transition-colors">
-            💬 WhatsApp Us
+            <FaWhatsapp size={18} /> WhatsApp Us
           </a>
         </div>
       </div>

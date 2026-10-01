@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star, BookOpen, Users, ChevronDown, Award, Clock } from "lucide-react";
+import { ArrowRight, Star, BookOpen, Users, ChevronDown, Award, Clock, Trophy } from "lucide-react";
 
 const STATS = [
   { value: "10+", label: "Years Experience" },
@@ -58,8 +58,9 @@ export default function Hero() {
               className="animate-fadeInUp"
               style={{ animationDelay: "0.05s", animationFillMode: "both" }}
             >
-              <span className="section-badge">
-                🏆 Hinganghat&apos;s #1 Maths Institute
+              <span className="section-badge flex items-center gap-1.5">
+                <Trophy size={14} className="text-primary flex-shrink-0" />
+                Hinganghat&apos;s #1 Maths Institute
               </span>
             </div>
 
@@ -134,7 +135,7 @@ export default function Hero() {
               {/* Logo circle */}
               <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-4 border-primary/30 ring-8 ring-primary/8 shadow-[0_0_60px_rgba(212,175,55,0.2)] animate-float">
                 <Image
-                  src="/logo.jpg"
+                  src="/logo.jpeg"
                   alt="Pathan Tutorials"
                   fill
                   sizes="(max-width: 640px) 224px, (max-width: 1024px) 256px, 288px"

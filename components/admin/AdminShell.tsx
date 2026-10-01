@@ -76,7 +76,7 @@ export default function AdminShell({ children, title }: AdminShellProps) {
         {/* Logo */}
         <div className="p-4 border-b border-[var(--border)] flex items-center gap-3">
           <div className="relative w-9 h-9 rounded-full overflow-hidden border border-primary/30">
-            <Image src="/logo.jpg" alt="PT" fill sizes="36px" className="object-cover" />
+            <Image src="/logo.jpeg" alt="PT" fill sizes="36px" className="object-cover" />
           </div>
           <div>
             <p className="text-sm font-700 text-white leading-tight">Pathan Tutorials</p>

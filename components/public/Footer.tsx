@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, MessageCircle, Mail, MapPin, ArrowRight, Clock } from "lucide-react";
-import { FaInstagram, FaFacebookF, FaYoutube, FaTelegramPlane, FaLinkedinIn } from "react-icons/fa";
+import { Phone, Mail, MapPin, ArrowRight, Clock } from "lucide-react";
+import { FaInstagram, FaFacebookF, FaYoutube, FaTelegram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa6";
 import { SiteSettings } from "@/lib/types";
 
 interface FooterProps {
@@ -29,7 +29,7 @@ const COURSE_LINKS = [
 ];
 
 export default function Footer({ settings }: FooterProps) {
-  const logo = settings?.logo || "/logo.jpg";
+  const logo = settings?.logo || "/logo.jpeg";
   const name = settings?.siteName || "Pathan Tutorials";
   const tagline = settings?.tagline || "Excellence in Mathematics";
   const description = settings?.footerDescription || settings?.description ||
@@ -43,11 +43,11 @@ export default function Footer({ settings }: FooterProps) {
   const hours = settings?.openingHours || "";
 
   const socials = [
-    { url: settings?.instagramUrl, Icon: FaInstagram,    label: "Instagram", color: "hover:text-[#e1306c] hover:border-[#e1306c]/30" },
-    { url: settings?.facebookUrl,  Icon: FaFacebookF,    label: "Facebook",  color: "hover:text-[#1877f2] hover:border-[#1877f2]/30" },
-    { url: settings?.youtubeUrl,   Icon: FaYoutube,      label: "YouTube",   color: "hover:text-[#ff0000] hover:border-[#ff0000]/30" },
-    { url: settings?.telegramUrl,  Icon: FaTelegramPlane,label: "Telegram",  color: "hover:text-[#0088cc] hover:border-[#0088cc]/30" },
-    { url: settings?.linkedinUrl,  Icon: FaLinkedinIn,   label: "LinkedIn",  color: "hover:text-[#0077b5] hover:border-[#0077b5]/30" },
+    { url: settings?.instagramUrl, Icon: FaInstagram, label: "Instagram", color: "hover:text-[#e1306c] hover:border-[#e1306c]/30" },
+    { url: settings?.facebookUrl, Icon: FaFacebookF, label: "Facebook", color: "hover:text-[#1877f2] hover:border-[#1877f2]/30" },
+    { url: settings?.youtubeUrl, Icon: FaYoutube, label: "YouTube", color: "hover:text-[#ff0000] hover:border-[#ff0000]/30" },
+    { url: settings?.telegramUrl, Icon: FaTelegram, label: "Telegram", color: "hover:text-[#0088cc] hover:border-[#0088cc]/30" },
+    { url: settings?.linkedinUrl, Icon: FaLinkedinIn, label: "LinkedIn", color: "hover:text-[#0077b5] hover:border-[#0077b5]/30" },
   ].filter((s) => s.url);
 
   return (
@@ -171,7 +171,7 @@ export default function Footer({ settings }: FooterProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)] hover:text-[#25d366] transition-colors group"
                 >
-                  <MessageCircle size={15} className="text-[#25d366] flex-shrink-0" />
+                  <FaWhatsapp size={16} className="text-[#25d366] flex-shrink-0" />
                   <span className="group-hover:underline underline-offset-2">{whatsapp}</span>
                 </a>
               )}

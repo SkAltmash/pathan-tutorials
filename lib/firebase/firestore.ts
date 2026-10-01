@@ -114,11 +114,11 @@ export async function saveFloatingButtons(data: Partial<FloatingButtonsSettings>
 // ── Statistics ─────────────────────────────────────────────────
 export async function getStatistics(): Promise<Statistic[]> {
   const ref = collection(db, COLLECTIONS.STATISTICS);
-  const q = query(ref, orderBy("order", "asc"));
-  const snap = await getDocs(q);
+  const snap = await getDocs(ref);
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() } as Statistic))
-    .filter((s) => s.isActive !== false);
+    .filter((s) => s.isActive !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getAllStatistics(): Promise<Statistic[]> {
@@ -146,11 +146,11 @@ export async function deleteStatistic(id: string) {
 // ── Courses ─────────────────────────────────────────────────────
 export async function getCourses(): Promise<Course[]> {
   const ref = collection(db, COLLECTIONS.COURSES);
-  const q = query(ref, orderBy("order", "asc"));
-  const snap = await getDocs(q);
+  const snap = await getDocs(ref);
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() } as Course))
-    .filter((c) => c.isActive !== false);
+    .filter((c) => c.isActive !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getAllCourses(): Promise<Course[]> {
@@ -208,11 +208,11 @@ export async function deleteResult(id: string) {
 // ── Achievements ───────────────────────────────────────────────
 export async function getAchievements(): Promise<Achievement[]> {
   const ref = collection(db, COLLECTIONS.ACHIEVEMENTS);
-  const q = query(ref, orderBy("order", "asc"));
-  const snap = await getDocs(q);
+  const snap = await getDocs(ref);
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() } as Achievement))
-    .filter((a) => a.isActive !== false);
+    .filter((a) => a.isActive !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getAllAchievements(): Promise<Achievement[]> {
@@ -240,11 +240,11 @@ export async function deleteAchievement(id: string) {
 // ── Gallery ────────────────────────────────────────────────────
 export async function getGallery(): Promise<GalleryImage[]> {
   const ref = collection(db, COLLECTIONS.GALLERY);
-  const q = query(ref, orderBy("order", "asc"));
-  const snap = await getDocs(q);
+  const snap = await getDocs(ref);
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() } as GalleryImage))
-    .filter((g) => g.isActive !== false);
+    .filter((g) => g.isActive !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getAllGallery(): Promise<GalleryImage[]> {
@@ -302,11 +302,11 @@ export async function deleteTestimonial(id: string) {
 // ── Faculty ────────────────────────────────────────────────────
 export async function getFaculty(): Promise<Faculty[]> {
   const ref = collection(db, COLLECTIONS.FACULTY);
-  const q = query(ref, orderBy("order", "asc"));
-  const snap = await getDocs(q);
+  const snap = await getDocs(ref);
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() } as Faculty))
-    .filter((f) => f.isActive !== false);
+    .filter((f) => f.isActive !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getAllFaculty(): Promise<Faculty[]> {

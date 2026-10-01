@@ -9,7 +9,7 @@ import { Plus, Trash2, Save, Loader2, GripVertical } from "lucide-react";
 import toast from "react-hot-toast";
 
 const DEFAULT_NAV: NavigationSettings = {
-  logo: "/logo.jpg",
+  logo: "/logo.jpeg",
   items: [
     { id: "1", label: "Home", href: "#home", order: 1, isActive: true },
     { id: "2", label: "Courses", href: "#courses", order: 2, isActive: true },

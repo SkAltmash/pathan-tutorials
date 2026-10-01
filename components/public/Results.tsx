@@ -5,12 +5,12 @@ import { Trophy, Medal, Filter } from "lucide-react";
 import { StudentResult } from "@/lib/types";
 
 const DEFAULT_RESULTS: StudentResult[] = [
-  { id: "1", studentName: "Aisha Khan", class: "10th", exam: "SSC", year: "2024", percentage: "96.4%", marks: "480/500", rank: "School Topper", studentPhoto: "", resultImage: "", achievementDescription: "Scored highest in Mathematics", isActive: true },
-  { id: "2", studentName: "Rohan Sharma", class: "12th", exam: "HSC", year: "2024", percentage: "94.2%", marks: "565/600", rank: "State Merit", studentPhoto: "", resultImage: "", achievementDescription: "State merit list for Mathematics", isActive: true },
-  { id: "3", studentName: "Priya Deshmukh", class: "12th", exam: "MHT-CET", year: "2024", percentage: "99.1%", marks: "178/200", rank: "Top 500 State", studentPhoto: "", resultImage: "", achievementDescription: "Top 500 in MHT-CET Mathematics", isActive: true },
-  { id: "4", studentName: "Vikram Patil", class: "10th", exam: "CBSE", year: "2024", percentage: "98%", marks: "98/100", rank: "District Topper", studentPhoto: "", resultImage: "", achievementDescription: "Full marks in Mathematics", isActive: true },
-  { id: "5", studentName: "Sneha Joshi", class: "9th", exam: "Annual Exam", year: "2023", percentage: "95%", marks: "475/500", rank: "Class Topper", studentPhoto: "", resultImage: "", achievementDescription: "Exceptional performance in Math", isActive: true },
-  { id: "6", studentName: "Arjun Mehta", class: "12th", exam: "MHT-CET", year: "2023", percentage: "97.8%", marks: "174/200", rank: "Top 200 State", studentPhoto: "", resultImage: "", achievementDescription: "Outstanding MHT-CET result", isActive: true },
+  { id: "1", studentName: "Aisha Khan", class: "10th", exam: "SSC", year: "2024", percentage: "96.4%", marks: "480/500", rank: "School Topper", studentPhoto: "", resultImage: "", achievementDescription: "Scored highest in Mathematics", isActive: true, showOnHome: false },
+  { id: "2", studentName: "Rohan Sharma", class: "12th", exam: "HSC", year: "2024", percentage: "94.2%", marks: "565/600", rank: "State Merit", studentPhoto: "", resultImage: "", achievementDescription: "State merit list for Mathematics", isActive: true, showOnHome: false },
+  { id: "3", studentName: "Priya Deshmukh", class: "12th", exam: "MHT-CET", year: "2024", percentage: "99.1%", marks: "178/200", rank: "Top 500 State", studentPhoto: "", resultImage: "", achievementDescription: "Top 500 in MHT-CET Mathematics", isActive: true, showOnHome: false },
+  { id: "4", studentName: "Vikram Patil", class: "10th", exam: "CBSE", year: "2024", percentage: "98%", marks: "98/100", rank: "District Topper", studentPhoto: "", resultImage: "", achievementDescription: "Full marks in Mathematics", isActive: true, showOnHome: false },
+  { id: "5", studentName: "Sneha Joshi", class: "9th", exam: "Annual Exam", year: "2023", percentage: "95%", marks: "475/500", rank: "Class Topper", studentPhoto: "", resultImage: "", achievementDescription: "Exceptional performance in Math", isActive: true, showOnHome: false },
+  { id: "6", studentName: "Arjun Mehta", class: "12th", exam: "MHT-CET", year: "2023", percentage: "97.8%", marks: "174/200", rank: "Top 200 State", studentPhoto: "", resultImage: "", achievementDescription: "Outstanding MHT-CET result", isActive: true, showOnHome: false },
 ];
 
 function ResultCard({ result }: { result: StudentResult }) {
